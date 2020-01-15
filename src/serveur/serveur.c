@@ -1,10 +1,8 @@
+#include "serveur.h"
 #include "../shared/message.h"
 #include <stdio.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-
-#define PATHNAME "/tmp/serveur.mq"
-#define PROJ_ID 125
 
 int main(int argc, char *argcv[]) { return start(); }
 
@@ -21,12 +19,13 @@ int process_connections(int msgid) {
 
   while (1) {
     message m;
-    msgrcv(msgid, &m, sizeof(m), );
+    puts("listening...");
+    // msgrcv(msgid, &m, sizeof(m), );
   }
 }
 
 int init_MQ() {
   key_t key;
   key = ftok(PATHNAME, PROJ_ID);
-  return msgget(key, 0666 | IPC_CREAT);
+  return msgget(key, MQ_RIGHTS);
 }
