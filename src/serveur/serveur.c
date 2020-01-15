@@ -1,14 +1,14 @@
 #include "serveur.h"
 #include "../shared/message.h"
+#include "../shared/mq.h"
 #include <stdio.h>
-#include <sys/ipc.h>
 #include <sys/msg.h>
 
 int main(int argc, char *argcv[]) { return start(); }
 
 int start() {
-  int msgid;
-  if ((msgid = init_MQ())) {
+  int msgid = init_MQ();
+  if (msgid > -1) {
     return process_connections(msgid);
   } else {
     return -1;
@@ -18,14 +18,12 @@ int start() {
 int process_connections(int msgid) {
 
   while (1) {
-    message m;
+    mq_buffer buffer;
     puts("listening...");
-    // msgrcv(msgid, &m, sizeof(m), );
+    msgrcv(msgid, &buffer, sizeof(buffer), 1, 0);
+    msgctl(msgid, IPC_RMID, NULL);
+    printf("data received: %s\n", buffer.mtext);
+    break;
   }
-}
-
-int init_MQ() {
-  key_t key;
-  key = ftok(PATHNAME, PROJ_ID);
-  return msgget(key, MQ_RIGHTS);
+  return 0;
 }

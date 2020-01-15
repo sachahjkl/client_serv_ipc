@@ -20,25 +20,40 @@ CDIR = $(SRC)client/
 SDIR = $(SRC)serveur/
 SHARED = $(SRC)shared/
 BDIR = bin/
-RM = \rm
+RM = rm
 
 ########################################################################
 ####################### Targets beginning here #########################
 ########################################################################
 
-serveur: serveur.o 
-	$(CC) $(CFLAGS) -o $(BDIR)serveur serveur.o 
+all: serveur client
+
+# Serveur
+serveur: serveur.o
+	$(CC) $(CFLAGS) -o $(BDIR)serveur $(SDIR)$< 
 
 serveur.o: $(SDIR)serveur.c $(SDIR)serveur.h
-	$(CC) $(CFLAGS) -c $(SDIR)serveur.c
+	$(CC) $(CFLAGS) -c $< -o $(SDIR)$@
 
-.PHONY: cleanall cleanbin cleanobjects
+# Client
+client: client.o message.o
+	$(CC) $(CFLAGS) -o $(BDIR)client $(CDIR)client.o $(SHARED)message.o
+
+client.o: $(CDIR)client.c $(CDIR)client.h
+	$(CC) $(CFLAGS) -c $< -o $(CDIR)$@
+
+# message
+message.o: $(SHARED)message.c $(SHARED)message.h
+	$(CC) $(CFLAGS) -c $< -o $(SHARED)$@
+
+.PHONY: clean cleanbin cleanobjects
+
+clean: cleanbin cleanobjects
 
 cleanbin:
 	$(RM) -f $(BDIR)*
 	
 cleanobjects:
-	$(RM) -rf *.o
+	find . -type f -name '*.o' -exec rm {} +
 
-cleanall: cleanbin cleanobjects
 	 
