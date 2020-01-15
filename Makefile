@@ -15,45 +15,45 @@ CC = gcc
 CFLAGS = -std=c11 -Wall
 
 # Makefile settings - Can be customized.
-SRC = src/
-CDIR = $(SRC)client/
-SDIR = $(SRC)serveur/
-SHARED = $(SRC)shared/
-BDIR = bin/
+SRC = src
+BDIR = bin
+CDIR = $(SRC)/client
+SDIR = $(SRC)/serveur
+SHARED = $(SRC)/shared
 RM = rm
 
 ########################################################################
 ####################### Targets beginning here #########################
 ########################################################################
+.PHONY: clean cleanb cleano all
 
 all: serveur client
 
 # Serveur
-serveur: serveur.o
-	$(CC) $(CFLAGS) -o $(BDIR)serveur $(SDIR)$< 
+serveur: serveur.o message.o
+	$(CC) $(CFLAGS) -o $(BDIR)/serveur $(SDIR)/$< $(SHARED)/message.o
 
-serveur.o: $(SDIR)serveur.c $(SDIR)serveur.h
-	$(CC) $(CFLAGS) -c $< -o $(SDIR)$@
+serveur.o: $(SDIR)/serveur.c $(SDIR)/serveur.h
+	$(CC) $(CFLAGS) -c $< -o $(SDIR)/$@
 
 # Client
 client: client.o message.o
-	$(CC) $(CFLAGS) -o $(BDIR)client $(CDIR)client.o $(SHARED)message.o
+	$(CC) $(CFLAGS) -o $(BDIR)/client $(CDIR)/$< $(SHARED)/message.o
 
-client.o: $(CDIR)client.c $(CDIR)client.h
-	$(CC) $(CFLAGS) -c $< -o $(CDIR)$@
+client.o: $(CDIR)/client.c $(CDIR)/client.h
+	$(CC) $(CFLAGS) -c $< -o $(CDIR)/$@
 
-# message
-message.o: $(SHARED)message.c $(SHARED)message.h
-	$(CC) $(CFLAGS) -c $< -o $(SHARED)$@
+# Message
+message.o: $(SHARED)/message.c $(SHARED)/message.h
+	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
 
-.PHONY: clean cleanbin cleanobjects
+# Cleaning
+clean: cleanb cleano
 
-clean: cleanbin cleanobjects
-
-cleanbin:
-	$(RM) -f $(BDIR)*
+cleanb:
+	@$(RM) -f $(BDIR)/*
 	
-cleanobjects:
-	find . -type f -name '*.o' -exec rm {} +
+cleano:
+	@find . -type f -name '*.o' -exec rm {} +
 
 	 

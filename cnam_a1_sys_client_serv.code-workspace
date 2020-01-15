@@ -4,7 +4,9 @@
 	}],
 	"settings": {
 		"files.associations": {
-			"message.h": "c"
+			"message.h": "c",
+			"mq.h": "c",
+			"serveur.h": "c"
 		}
 	}
 }

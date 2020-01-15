@@ -1,14 +1,13 @@
 #ifndef MQ_H
 #define MQ_Q
-#include <sys/ipc.h>
 #include <sys/msg.h>
 
-#define DIR "/tmp/"
+#define DIR "/tmp"
 #define FILENAME "serveur.mq"
-#define PATHNAME DIR FILENAME
+#define PATHNAME DIR "/" FILENAME
 #define PROJ_ID 125
 #define MQ_RIGHTS 0666 | IPC_CREAT
-#define MAX_TEXT 1024
+#define MAX_TEXT 1023
 
 typedef struct mq_buffer {
   long mtype;
