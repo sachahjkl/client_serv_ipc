@@ -21,9 +21,9 @@ int send(int argc, char *argv[]) {
   strcpy(m.service_name, "test_service");
   char *args[] = {"client", "test", "martin", "grand-frere", "sacha", "siva"};
   m.argv = args;
-  strcpy(buffer.mtext, serialize(m));
-  msgsnd(msgid, &buffer, sizeof(buffer), 0);
-  printf("message sent: %s\n", buffer.mtext);
+  // strcpy(buffer.mtext, serialize(m));
+  // msgsnd(msgid, &buffer, sizeof(buffer), 0);
+  // printf("message sent: %s\n", buffer.mtext);
   return EXIT_SUCCESS;
 }
 
