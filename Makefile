@@ -30,8 +30,10 @@ RM = rm
 all: serveur client
 
 # Serveur
-serveur: serveur.o message.o
-	$(CC) $(CFLAGS) -o $(BDIR)/serveur $(SDIR)/$< $(SHARED)/message.o
+serveur: serveur.o message.o log.o
+	$(CC) $(CFLAGS) -o $(BDIR)/serveur $(SDIR)/$< \
+	$(SHARED)/message.o \
+	$(SHARED)/log.o
 
 serveur.o: $(SDIR)/serveur.c $(SDIR)/serveur.h
 	$(CC) $(CFLAGS) -c $< -o $(SDIR)/$@
@@ -45,6 +47,9 @@ client.o: $(CDIR)/client.c $(CDIR)/client.h
 
 # Message
 message.o: $(SHARED)/message.c $(SHARED)/message.h
+	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
+
+log.o: $(SHARED)/log.c $(SHARED)/log.h
 	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
 
 # Cleaning

@@ -6,6 +6,8 @@
 #define FILENAME "serveur.mq"
 #define PATHNAME DIR "/" FILENAME
 #define PROJ_ID 125
+#define TYPE_CLIENT 7002
+#define TYPE_SERVEUR 2007
 #define MQ_RIGHTS 0666 | IPC_CREAT
 #define MAX_TEXT 1023
 
