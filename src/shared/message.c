@@ -27,12 +27,9 @@ message deserialize(char *string) {
   tok = strtok(NULL, SEPARATOR);
   while (tok != NULL && i < MAX_ARGS) {
     args[i++] = tok;
-    printf("%d\n", i);
     tok = strtok(NULL, SEPARATOR);
   }
-  if (i == 0) {
-    exit(EXIT_FAILURE);
-  }
+
   args = realloc(args, sizeof(char *) * i);
   m.argv = args;
   m.argc = i;
