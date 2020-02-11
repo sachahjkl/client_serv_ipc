@@ -6,7 +6,9 @@
 		"files.associations": {
 			"message.h": "c",
 			"mq.h": "c",
-			"serveur.h": "c"
+			"serveur.h": "c",
+			"msg.h": "c",
+			"cerrno": "c"
 		}
 	}
 }

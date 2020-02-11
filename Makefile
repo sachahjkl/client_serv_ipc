@@ -20,12 +20,15 @@ BDIR = bin
 CDIR = $(SRC)/client
 SDIR = $(SRC)/serveur
 SHARED = $(SRC)/shared
-RM = rm
+RM = \rm
+
+# Other
+FIFO_EXT = fifo
 
 ########################################################################
 ####################### Targets beginning here #########################
 ########################################################################
-.PHONY: clean cleanb cleano all
+.PHONY: clean cleanb cleano cleantmp all
 
 all: serveur client
 
@@ -39,8 +42,10 @@ serveur.o: $(SDIR)/serveur.c $(SDIR)/serveur.h
 	$(CC) $(CFLAGS) -c $< -o $(SDIR)/$@
 
 # Client
-client: client.o message.o
-	$(CC) $(CFLAGS) -o $(BDIR)/client $(CDIR)/$< $(SHARED)/message.o
+client: client.o message.o log.o
+	$(CC) $(CFLAGS) -o $(BDIR)/client $(CDIR)/$< \
+	$(SHARED)/message.o \
+	$(SHARED)/log.o
 
 client.o: $(CDIR)/client.c $(CDIR)/client.h
 	$(CC) $(CFLAGS) -c $< -o $(CDIR)/$@
@@ -53,12 +58,15 @@ log.o: $(SHARED)/log.c $(SHARED)/log.h
 	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
 
 # Cleaning
-clean: cleanb cleano
+clean: cleanb cleano cleantmp
 
 cleanb:
 	@$(RM) -f $(BDIR)/*
 	
 cleano:
-	@find . -type f -name '*.o' -exec rm {} +
+	@find . -type f -name '*.o' -delete
+	
+cleantmp:
+	-@find /tmp/ -type p -name '*.$(FIFO_EXT)' -delete 2>/dev/null || true
 
 	 
