@@ -3,28 +3,33 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *serialize(message m) {
+char *m_serialize(message m) {
   char *str = malloc(MAX_SERIALIZED_LENGTH + 1);
-  strcat(str, m.service_name);
-  strcat(str, SEPARATOR);
+  sprintf(str, "%s%s", m.service_name, SEPARATOR);
   for (int i = 0; i < m.argc - 1; i++) {
-    strcat(str, m.argv[i]);
-    strcat(str, SEPARATOR);
+    sprintf(str + strlen(str), "%s%s", m.argv[i], SEPARATOR);
   }
   strcat(str, m.argv[m.argc - 1]);
   return str;
 }
 
-message deserialize(char *string) {
+message m_deserialize(char *string) {
   message m;
   char *tok = strtok(string, SEPARATOR);
   int i = 0;
-  char **args = malloc(sizeof(char *) * MAX_ARGS);
   if (tok == NULL) {
     exit(EXIT_FAILURE);
   }
   strcpy(m.service_name, tok);
+
   tok = strtok(NULL, SEPARATOR);
+  if (tok == NULL) {
+    m.argv = NULL;
+    m.argc = 0;
+    return m;
+  }
+
+  char **args = malloc(sizeof(char *) * MAX_ARGS);
   while (tok != NULL && i < MAX_ARGS) {
     args[i++] = tok;
     tok = strtok(NULL, SEPARATOR);

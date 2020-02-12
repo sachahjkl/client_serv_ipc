@@ -16,10 +16,6 @@ typedef struct mq_buffer {
   char mtext[MAX_TEXT + 1];
 } mq_buffer;
 
-int init_MQ() {
-  key_t key;
-  key = ftok(PATHNAME, PROJ_ID);
-  return msgget(key, MQ_RIGHTS);
-}
+int init_MQ();
 
 #endif

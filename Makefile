@@ -28,37 +28,54 @@ FIFO_EXT = fifo
 ########################################################################
 ####################### Targets beginning here #########################
 ########################################################################
-.PHONY: clean cleanb cleano cleantmp all
+.PHONY: clean cleanb cleano cleanfifo all
 
 all: serveur client
 
 # Serveur
-serveur: serveur.o message.o log.o
+serveur: serveur.o service.o mq.o message.o log.o result.o 
 	$(CC) $(CFLAGS) -o $(BDIR)/serveur $(SDIR)/$< \
+	$(SDIR)/service.o \
+	$(SHARED)/mq.o \
 	$(SHARED)/message.o \
-	$(SHARED)/log.o
+	$(SHARED)/log.o \
+	$(SHARED)/result.o
 
-serveur.o: $(SDIR)/serveur.c $(SDIR)/serveur.h
+serveur.o: $(SDIR)/serveur.c $(SDIR)/serveur.h $(SDIR)
 	$(CC) $(CFLAGS) -c $< -o $(SDIR)/$@
 
 # Client
-client: client.o message.o log.o
+client: client.o mq.o message.o log.o result.o
 	$(CC) $(CFLAGS) -o $(BDIR)/client $(CDIR)/$< \
+	$(SHARED)/mq.o \
 	$(SHARED)/message.o \
-	$(SHARED)/log.o
+	$(SHARED)/log.o \
+	$(SHARED)/result.o
 
 client.o: $(CDIR)/client.c $(CDIR)/client.h
 	$(CC) $(CFLAGS) -c $< -o $(CDIR)/$@
+
+service.o: $(SDIR)/service.c $(SDIR)/service.h
+	$(CC) $(CFLAGS) -c $< -o $(SDIR)/$@
 
 # Message
 message.o: $(SHARED)/message.c $(SHARED)/message.h
 	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
 
+mq.o: $(SHARED)/mq.c $(SHARED)/mq.h
+	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
+
 log.o: $(SHARED)/log.c $(SHARED)/log.h
 	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
 
+result.o: $(SHARED)/result.c $(SHARED)/result.h
+	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
+
+# %.o: $(SHARED)/%.c $(SHARED)/%.h
+# 	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
+
 # Cleaning
-clean: cleanb cleano cleantmp
+clean: cleanb cleano cleanfifo
 
 cleanb:
 	@$(RM) -f $(BDIR)/*
@@ -66,7 +83,7 @@ cleanb:
 cleano:
 	@find . -type f -name '*.o' -delete
 	
-cleantmp:
+cleanfifo:
 	-@find /tmp/ -type p -name '*.$(FIFO_EXT)' -delete 2>/dev/null || true
 
 	 

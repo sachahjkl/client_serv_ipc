@@ -13,7 +13,7 @@
 #include <unistd.h>
 
 int main(int argc, char *argv[]) {
-  // on retire le premier argument de la liste
+  // on retire le premier argument de la liste (nom de l'executable)
   // en utilisant de l'arithmetique des pointeurs
   return send(argc - 1, argv + 1);
 }
@@ -23,13 +23,16 @@ int send(int argc, char *argv[]) {
     log_error("Arguments saisis insatisfaisants", NULL);
     exit(EXIT_FAILURE);
   }
-  message m;
-  m.argc = argc;
-  m.argv = argv;
-  char buffer[MAX_SERIALIZED_LENGTH + 1];
-  char **pipes = get_named_pipe();
 
-  log_info("pipes : |%s| |%s|", pipes[0], pipes[1]);
+  message m;
+  strcpy(m.service_name, argv[0]);
+  m.argc = argc - 1;
+  m.argv = argv + 1;
+
+  char m_buffer[MAX_SERIALIZED_LENGTH + 1];
+  char r_buffer[MAX_SERIALIZED_LENGTH + 1];
+  char **pipes = get_named_pipes();
+
   errno = 0;
   int fd_write = open(pipes[0], O_WRONLY);
   int fd_read = open(pipes[1], O_RDONLY);
@@ -38,20 +41,22 @@ int send(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  strcpy(buffer, serialize(m));
-  write(fd_write, buffer, sizeof(buffer));
-  read(fd_read, buffer, sizeof(buffer));
-  puts(buffer);
-
-  // free(pipes);
-  close(fd_read);
+  strcpy(m_buffer, m_serialize(m));
+  write(fd_write, m_buffer, sizeof(m_buffer));
   close(fd_write);
+
+  read(fd_read, r_buffer, sizeof(r_buffer));
+  close(fd_read);
+  result r = r_deserialize(r_buffer);
+
+  display_results(r);
+
   return EXIT_SUCCESS;
 }
 
 // retournera toujours un tableau comportant les deux noms
 // des named pipes auxquels se connecter
-char **get_named_pipe() {
+char **get_named_pipes() {
   const int NB_PIPES = 2;
   int msgid = init_MQ();
   mq_buffer buffer;
@@ -83,4 +88,10 @@ int check(int argc, char *argv[]) {
   // -> qu'ils satisfont certaines conditions
   res = argc > 0 ? res : EXIT_FAILURE;
   return res;
+}
+
+void display_results(result r) {
+  printf("valeur : %s", r.value);
+  // TODO à compléter
+  return;
 }

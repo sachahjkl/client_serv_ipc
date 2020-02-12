@@ -8,7 +8,10 @@
 			"mq.h": "c",
 			"serveur.h": "c",
 			"msg.h": "c",
-			"cerrno": "c"
+			"cerrno": "c",
+			"service.h": "c",
+			"errno.h": "c",
+			"system_error": "c"
 		}
 	}
 }

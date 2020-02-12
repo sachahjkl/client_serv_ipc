@@ -2,6 +2,8 @@
 #include "../shared/log.h"
 #include "../shared/message.h"
 #include "../shared/mq.h"
+#include "../shared/result.h"
+#include "service.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -75,9 +77,18 @@ int handle_connection(int msgid, int client_id) {
   int fd_write = open(pathname_write, O_WRONLY);
 
   char m_buffer[MAX_SERIALIZED_LENGTH + 1];
-  read(fd_read, m_buffer, sizeof(buffer));
-  write(fd_write, m_buffer, sizeof(buffer));
-  log_info("Réception provenant du client: %s", m_buffer);
+  read(fd_read, m_buffer, sizeof(m_buffer));
+  message m = m_deserialize(m_buffer);
+  close(fd_read);
+  unlink(pathname_read);
+  printf("%s\n", m.service_name);
+  result r = start_service(m);
+  puts("--- before serialize");
+  char *r_buffer = r_serialize(r);
+  printf("||%s||", r_buffer);
+  write(fd_write, r_buffer, sizeof(r_buffer));
+  close(fd_write);
+  unlink(pathname_write);
 
   return EXIT_SUCCESS;
 }
