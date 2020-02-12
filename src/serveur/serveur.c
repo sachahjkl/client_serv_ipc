@@ -82,6 +82,7 @@ int handle_connection(int msgid, int client_id) {
   close(fd_read);
   unlink(pathname_read);
   printf("%s\n", m.service_name);
+
   result r = start_service(m);
   puts("--- before serialize");
   char *r_buffer = r_serialize(r);
