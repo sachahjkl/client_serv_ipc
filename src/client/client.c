@@ -33,7 +33,6 @@ int send(int argc, char *argv[]) {
   char r_buffer[MAX_VALUE_LENGTH * 2 + FLOAT_SIZE + 1];
   char **pipes = get_named_pipes();
 
-  printf("%s\n %s\n", pipes[0], pipes[1]);
   errno = 0;
   int fd_write = open(pipes[0], O_WRONLY);
   int fd_read = open(pipes[1], O_RDONLY);
