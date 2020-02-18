@@ -30,9 +30,10 @@ int send(int argc, char *argv[]) {
   m.argv = argv + 1;
 
   char m_buffer[MAX_SERIALIZED_LENGTH + 1];
-  char r_buffer[MAX_SERIALIZED_LENGTH + 1];
+  char r_buffer[MAX_VALUE_LENGTH * 2 + FLOAT_SIZE + 1];
   char **pipes = get_named_pipes();
 
+  printf("%s\n %s\n", pipes[0], pipes[1]);
   errno = 0;
   int fd_write = open(pipes[0], O_WRONLY);
   int fd_read = open(pipes[1], O_RDONLY);
@@ -58,13 +59,19 @@ int send(int argc, char *argv[]) {
 // des named pipes auxquels se connecter
 char **get_named_pipes() {
   const int NB_PIPES = 2;
+  errno = 0;
   int msgid = init_MQ();
+  if (msgid == -1) {
+    fprintf(stderr, "Erreur à la création de la message queue : %s\n",
+            strerror(errno));
+    exit(EXIT_FAILURE);
+  }
   mq_buffer buffer;
 
   char **pipes = malloc(sizeof(char *) * NB_PIPES);
+
   pipes[0] = malloc(sizeof(char) * MAX_INSTR_LENGTH + 1);
   pipes[1] = malloc(sizeof(char) * MAX_INSTR_LENGTH + 1);
-  // vérifier si le malloc a fonctionné !
 
   buffer.mtype = TYPE_CLIENT;
   strcpy(buffer.mtext, CONNECT_REQUEST_CODE);
@@ -91,7 +98,9 @@ int check(int argc, char *argv[]) {
 }
 
 void display_results(result r) {
-  printf("valeur : %s", r.value);
+  printf("valeur : %s\n", r.value);
+  printf("Temps passé : %s\n", r.time_spent);
+  printf("Utilisation Mémoire : %f\n", r.ram_used);
   // TODO à compléter
   return;
 }

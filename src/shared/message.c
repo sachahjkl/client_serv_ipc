@@ -6,10 +6,12 @@
 char *m_serialize(message m) {
   char *str = malloc(MAX_SERIALIZED_LENGTH + 1);
   sprintf(str, "%s%s", m.service_name, SEPARATOR);
-  for (int i = 0; i < m.argc - 1; i++) {
-    sprintf(str + strlen(str), "%s%s", m.argv[i], SEPARATOR);
+  if (m.argc != 0) {
+    for (int i = 0; i < m.argc - 1; i++) {
+      sprintf(str + strlen(str), "%s%s", m.argv[i], SEPARATOR);
+    }
+    strcat(str, m.argv[m.argc - 1]);
   }
-  strcat(str, m.argv[m.argc - 1]);
   return str;
 }
 
@@ -22,14 +24,8 @@ message m_deserialize(char *string) {
   }
   strcpy(m.service_name, tok);
 
-  tok = strtok(NULL, SEPARATOR);
-  if (tok == NULL) {
-    m.argv = NULL;
-    m.argc = 0;
-    return m;
-  }
-
   char **args = malloc(sizeof(char *) * MAX_ARGS);
+  tok = strtok(NULL, SEPARATOR);
   while (tok != NULL && i < MAX_ARGS) {
     args[i++] = tok;
     tok = strtok(NULL, SEPARATOR);

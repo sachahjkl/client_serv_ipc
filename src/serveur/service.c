@@ -4,31 +4,41 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *get_services();
+result unknown_service();
+result get_services();
 
 result start_service(message m) {
   result r;
-  printf("%s\n", m.service_name);
   if (strcmp(m.service_name, CALCUL_SIMPLE) == 0) {
   } else if (strcmp(m.service_name, COMPTEUR_MOTS) == 0) {
   } else if (strcmp(m.service_name, PROBA_MOTS) == 0) {
   } else if (strcmp(m.service_name, PROBA_CHAR) == 0) {
   } else if (strcmp(m.service_name, SERVICES) == 0) {
-    strcpy(r.value, get_services());
+    r = get_services();
   } else {
-    strcpy(r.value, UNKOWN_SERVICE);
-    strcpy(r.time_spent, "NULL");
-    r.ram_used = 0.0f;
+    r = unknown_service();
   }
   return r;
 }
 
-char *get_services() {
+result unknown_service() {
+  result r;
+  strcpy(r.value, UNKOWN_SERVICE);
+  strcpy(r.time_spent, "NULL");
+  r.ram_used = 0.0f;
+  return r;
+}
+
+result get_services() {
+  result r;
+  const char S_SEPARATOR = ' ';
   int nb_services = sizeof(services) / sizeof(char *);
-  char *services_str = malloc(sizeof(char) * (MAX_VALUE_LENGTH + 1));
+  memset(r.value, '\0', sizeof(r.value));
   for (int i = 0; i < nb_services - 1; i++) {
-    sprintf(services_str + strlen(services_str), "%s ", services[i]);
+    sprintf(r.value + strlen(r.value), "%s%c", services[i], S_SEPARATOR);
   }
-  sprintf(services_str + strlen(services_str), "%s", services[nb_services - 1]);
-  return services_str;
+  sprintf(r.value + strlen(r.value), "%s", services[nb_services - 1]);
+  strcpy(r.time_spent, "NULL");
+  r.ram_used = 0.0f;
+  return r;
 }

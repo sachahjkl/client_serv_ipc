@@ -4,9 +4,9 @@
 #include <string.h>
 
 char *r_serialize(result r) {
-  char *str = malloc(MAX_VALUE_LENGTH * 2 + 33);
-  puts("--- SERIALIZING");
-  sprintf(str, "%s%s%s%s%f", r.value, SEPARATOR, r.time_spent, SEPARATOR,
+
+  char *str = malloc(MAX_VALUE_LENGTH * 2 + FLOAT_SIZE + 1);
+  sprintf(str, "%s%s%s%s%3.2f", r.value, SEPARATOR, r.time_spent, SEPARATOR,
           r.ram_used);
   return str;
 }

@@ -11,7 +11,10 @@
 			"cerrno": "c",
 			"service.h": "c",
 			"errno.h": "c",
-			"system_error": "c"
+			"system_error": "c",
+			"stdlib.h": "c",
+			"stdio.h": "c",
+			"result.h": "c"
 		}
 	}
 }

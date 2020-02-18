@@ -2,11 +2,13 @@
 #define RESULT_H
 
 #define MAX_VALUE_LENGTH 1023
+#define TIME_SPENT_LENGTH 255
+#define FLOAT_SIZE 5
 #define SEPARATOR "|"
 typedef struct result
 {
   char value[MAX_VALUE_LENGTH + 1];
-  char time_spent[MAX_VALUE_LENGTH + 1];
+  char time_spent[TIME_SPENT_LENGTH + 1];
   float ram_used;
 } result;
 
