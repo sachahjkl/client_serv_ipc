@@ -16,7 +16,8 @@ CFLAGS = -std=c11 -Wall
 
 # Makefile settings - Can be customized.
 SRC = src
-BDIR = bin
+BIN = bin
+OBJ = obj
 CDIR = $(SRC)/client
 SDIR = $(SRC)/serveur
 SHARED = $(SRC)/shared
@@ -25,60 +26,46 @@ RM = \rm
 # Other
 FIFO_EXT = fifo
 
-########################################################################
-####################### Targets beginning here #########################
-########################################################################
+# Cibles
 .PHONY: clean cleanb cleano cleanfifo all
 
 all: serveur client
 
 # Serveur
 serveur: serveur.o service.o mq.o message.o log.o result.o 
-	$(CC) $(CFLAGS) -o $(BDIR)/serveur $(SDIR)/$< \
-	$(SDIR)/service.o \
-	$(SHARED)/mq.o \
-	$(SHARED)/message.o \
-	$(SHARED)/log.o \
-	$(SHARED)/result.o
+	$(CC) $(CFLAGS) -o $(BIN)/serveur $(OBJ)/$< \
+	$(OBJ)/service.o \
+	$(OBJ)/mq.o \
+	$(OBJ)/message.o \
+	$(OBJ)/log.o \
+	$(OBJ)/result.o
 
-serveur.o: $(SDIR)/serveur.c $(SDIR)/serveur.h $(SDIR)
-	$(CC) $(CFLAGS) -c $< -o $(SDIR)/$@
+serveur.o: $(SDIR)/serveur.c $(SDIR)/serveur.h
+	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
 
 # Client
 client: client.o mq.o message.o log.o result.o
-	$(CC) $(CFLAGS) -o $(BDIR)/client $(CDIR)/$< \
-	$(SHARED)/mq.o \
-	$(SHARED)/message.o \
-	$(SHARED)/log.o \
-	$(SHARED)/result.o
+	$(CC) $(CFLAGS) -o $(BIN)/client $(OBJ)/$< \
+	$(OBJ)/mq.o \
+	$(OBJ)/message.o \
+	$(OBJ)/log.o \
+	$(OBJ)/result.o
 
 client.o: $(CDIR)/client.c $(CDIR)/client.h
-	$(CC) $(CFLAGS) -c $< -o $(CDIR)/$@
+	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
 
 service.o: $(SDIR)/service.c $(SDIR)/service.h
-	$(CC) $(CFLAGS) -c $< -o $(SDIR)/$@
+	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
 
-# Message
-message.o: $(SHARED)/message.c $(SHARED)/message.h
-	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
-
-mq.o: $(SHARED)/mq.c $(SHARED)/mq.h
-	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
-
-log.o: $(SHARED)/log.c $(SHARED)/log.h
-	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
-
-result.o: $(SHARED)/result.c $(SHARED)/result.h
-	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
-
-# %.o: $(SHARED)/%.c $(SHARED)/%.h
-# 	$(CC) $(CFLAGS) -c $< -o $(SHARED)/$@
+# dépendances paratagées
+%.o: $(SHARED)/%.c $(SHARED)/%.h
+	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
 
 # Cleaning
 clean: cleanb cleano cleanfifo
 
 cleanb:
-	@$(RM) -f $(BDIR)/*
+	@$(RM) -f $(BIN)/*
 	
 cleano:
 	@find . -type f -name '*.o' -delete
