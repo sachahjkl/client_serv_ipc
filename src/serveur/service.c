@@ -11,6 +11,7 @@
 
 char *unknown_service();
 char *get_services();
+long long int get_memory(pid_t pid);
 
 result start_service(message m) {
   result r;

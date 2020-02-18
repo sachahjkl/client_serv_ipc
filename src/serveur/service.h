@@ -22,6 +22,5 @@ static const char *services[] = {CALCUL_SIMPLE, COMPTEUR_MOTS, PROBA_MOTS,
                                  PROBA_CHAR, SERVICES};
 
 result start_service(message m);
-long long int get_memory(pid_t pid);
 
 #endif
