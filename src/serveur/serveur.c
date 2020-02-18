@@ -1,11 +1,8 @@
 #include "serveur.h"
-#include "../shared/log.h"
-#include "../shared/message.h"
-#include "../shared/mq.h"
-#include "../shared/result.h"
-#include "service.h"
+
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,14 +10,20 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "../shared/log.h"
+#include "../shared/message.h"
+#include "../shared/mq.h"
+#include "../shared/result.h"
+#include "service.h"
+
 int main(int argc, char *argcv[]) { return start(); }
 
 int start() {
   // TODO réécrire le signal handler pour les SIG_INT/TERM
   errno = 0;
 
-  int msgid = init_MQ();         // au cas ou des clients aient fait des
-  msgctl(msgid, IPC_RMID, NULL); // tentatives abandonnées de connection
+  int msgid = init_MQ();          // au cas ou des clients aient fait des
+  msgctl(msgid, IPC_RMID, NULL);  // tentatives abandonnées de connection
 
   msgid = init_MQ();
   if (errno != 0) {
@@ -33,19 +36,21 @@ int start() {
 }
 
 int process_connections(int msgid) {
+  signal(
+      SIGCHLD,
+      SIG_IGN);  // on ne fait rien des processus fils après leurs terminaison
   while (1) {
     mq_buffer buffer;
     log_info("listening...", NULL);
     if (msgrcv(msgid, &buffer, sizeof(buffer.mtext), TYPE_CLIENT, 0) > 0) {
       if (strcmp(CONNECT_REQUEST_CODE, buffer.mtext) == 0) {
         int id = fork();
-
         int client_id = client_counter++;
         if (id == 0) {
           // On charge le fils qui vient d'être créé de s'occuper
           // de la connexion avec le client demandant un service
           int ret = handle_connection(msgid, client_id);
-          log_info("Fin du traitement connexion n°%d", client_id);
+          log_info("Fin du traitement connexion n°%d - %d", client_id, ret);
           exit(ret);
         } else if (id < 0) {
           exit(EXIT_FAILURE);

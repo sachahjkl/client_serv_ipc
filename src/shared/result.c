@@ -1,12 +1,12 @@
 #include "result.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 char *r_serialize(result r) {
-
   char *str = malloc(MAX_VALUE_LENGTH * 2 + FLOAT_SIZE + 1);
-  sprintf(str, "%s%s%s%s%3.2f", r.value, SEPARATOR, r.time_spent, SEPARATOR,
+  sprintf(str, "%s%s%s%s%ld", r.value, SEPARATOR, r.time_spent, SEPARATOR,
           r.ram_used);
   return str;
 }
@@ -21,7 +21,7 @@ result r_deserialize(char *string) {
   tok = strtok(NULL, SEPARATOR);
   strcpy(r.time_spent, tok);
   tok = strtok(NULL, SEPARATOR);
-  r.ram_used = atof(tok);
+  r.ram_used = atol(tok);
 
   return r;
 }

@@ -1,7 +1,5 @@
 #include "client.h"
-#include "../shared/log.h"
-#include "../shared/message.h"
-#include "../shared/mq.h"
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -11,6 +9,10 @@
 #include <sys/msg.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include "../shared/log.h"
+#include "../shared/message.h"
+#include "../shared/mq.h"
 
 int main(int argc, char *argv[]) {
   // on retire le premier argument de la liste (nom de l'executable)
@@ -97,9 +99,10 @@ int check(int argc, char *argv[]) {
 }
 
 void display_results(result r) {
-  printf("valeur : %s\n", r.value);
-  printf("Temps passé : %s\n", r.time_spent);
-  printf("Utilisation Mémoire : %f\n", r.ram_used);
+  printf("[Valeur]\n%s\n\n", r.value);
+  printf("[Temps passé]\n%s\n\n", r.time_spent);
+  printf("[Utilisation Mémoire]\n%ld kB\n\n", r.ram_used / 1024);
+
   // TODO à compléter
   return;
 }

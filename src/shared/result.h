@@ -5,11 +5,10 @@
 #define TIME_SPENT_LENGTH 255
 #define FLOAT_SIZE 5
 #define SEPARATOR "|"
-typedef struct result
-{
+typedef struct result {
   char value[MAX_VALUE_LENGTH + 1];
   char time_spent[TIME_SPENT_LENGTH + 1];
-  float ram_used;
+  long ram_used;  // en kilo-octets
 } result;
 
 char *r_serialize(result r);
