@@ -18,7 +18,7 @@ result start_service(message m) {
   char *value = not_implemented();
   time_t start = clock();
   if (strcmp(m.service_name, CALCUL_SIMPLE) == 0) {
-    value = not_implemented();
+    value = calcul_simple(m.argc, m.argv);
   } else if (strcmp(m.service_name, COMPTEUR_MOTS) == 0) {
     value = not_implemented();
   } else if (strcmp(m.service_name, PROBA_MOTS) == 0) {
