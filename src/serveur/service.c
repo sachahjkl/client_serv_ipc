@@ -8,22 +8,25 @@
 #include <unistd.h>
 
 #include "../shared/result.h"
+#include "services/calcul_simple.h"
 
-char *unknown_service();
-char *get_services();
-long long int get_memory(pid_t pid);
+const char *services[] = {CALCUL_SIMPLE, COMPTEUR_MOTS, PROBA_MOTS, PROBA_CHAR,
+                          SERVICES};
 
 result start_service(message m) {
   result r;
-  char *value;
+  char *value = not_implemented();
   time_t start = clock();
   if (strcmp(m.service_name, CALCUL_SIMPLE) == 0) {
+    value = not_implemented();
   } else if (strcmp(m.service_name, COMPTEUR_MOTS) == 0) {
+    value = not_implemented();
   } else if (strcmp(m.service_name, PROBA_MOTS) == 0) {
+    value = not_implemented();
   } else if (strcmp(m.service_name, PROBA_CHAR) == 0) {
+    value = not_implemented();
   } else if (strcmp(m.service_name, SERVICES) == 0) {
     value = get_services();
-
   } else {
     value = unknown_service();
   }
@@ -41,7 +44,13 @@ char *unknown_service() {
   char *value;
   value = malloc(sizeof(char) * MAX_VALUE_LENGTH + 1);
   strcpy(value, UNKOWN_SERVICE);
+  return value;
+}
 
+char *not_implemented() {
+  char *value;
+  value = malloc(sizeof(char) * MAX_VALUE_LENGTH + 1);
+  strcpy(value, NOT_IMPLEMENTED);
   return value;
 }
 
@@ -77,7 +86,6 @@ long long int get_memory(pid_t pid) {
   for (int i = 0; i < mem_size_pos - 1 && value != NULL; i++) {
     value = strtok(NULL, " ");
   }
-  printf("-- %s\n", value);
   mem_size = atoll(value);
   return mem_size;
 }

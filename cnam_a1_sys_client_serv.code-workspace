@@ -34,7 +34,8 @@
 			"functional": "c",
 			"tuple": "c",
 			"type_traits": "c",
-			"utility": "c"
+			"utility": "c",
+			"calcul_simple.h": "c"
 		},
 		"clang-format.fallbackStyle": "Google"
 	}

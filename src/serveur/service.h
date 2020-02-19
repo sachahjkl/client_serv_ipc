@@ -11,6 +11,7 @@
 #define UNKOWN_SERVICE                                                     \
   "Nom de service inconnu. Essayez 'services' pour afficher les services " \
   "disponibles."
+#define NOT_IMPLEMENTED "Service pas encore implémenté."
 
 #define CALCUL_SIMPLE "calcul-simple"
 #define COMPTEUR_MOTS "compteur-mots"
@@ -18,9 +19,10 @@
 #define PROBA_CHAR "proba_char"
 #define SERVICES "services"
 
-static const char *services[] = {CALCUL_SIMPLE, COMPTEUR_MOTS, PROBA_MOTS,
-                                 PROBA_CHAR, SERVICES};
-
 result start_service(message m);
+char *unknown_service();
+char *not_implemented();
+char *get_services();
+long long int get_memory(pid_t pid);
 
 #endif

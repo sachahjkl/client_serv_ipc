@@ -74,6 +74,9 @@ int handle_connection(int msgid, int client_id) {
   sprintf(pathname_read, "%s/read_%d%s", DIR, client_id, NAMED_PIPE_SUFFIX);
   sprintf(pathname_write, "%s/write_%d%s", DIR, client_id, NAMED_PIPE_SUFFIX);
 
+  remove(pathname_read);
+  remove(pathname_write);
+
   errno = 0;
   mkfifo(pathname_read, PERMISSION_FIFO);
   mkfifo(pathname_write, PERMISSION_FIFO);
