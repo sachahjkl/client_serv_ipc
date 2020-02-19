@@ -42,9 +42,6 @@ serveur: serveur.o service.o mq.o message.o log.o result.o calcul_simple.o
 	$(OBJ)/result.o \
 	$(OBJ)/calcul_simple.o
 
-%.o: $(SDIR)/%.c $(SDIR)/%.h
-	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
-
 # Client
 client: client.o mq.o message.o log.o result.o
 	$(CC) $(CFLAGS) -o $(BIN)/client $(OBJ)/$< \
@@ -53,19 +50,21 @@ client: client.o mq.o message.o log.o result.o
 	$(OBJ)/log.o \
 	$(OBJ)/result.o
 
-client.o: $(CDIR)/client.c $(CDIR)/client.h
+#génération de ce qui est dans client/ et serveur/
+%.o: $(SDIR)/%.c $(SDIR)/%.h
+	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
+	
+%.o: $(CDIR)/%.c $(CDIR)/%.h
 	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
 
-# service.o: $(SDIR)/service.c $(SDIR)/service.h
-# 	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
 
 # dépendances paratagées
 %.o: $(SHARED)/%.c $(SHARED)/%.h
 	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
 
+# services
 %.o: $(SERVICES_DIR)/%.c $(SERVICES_DIR)/%.h
 	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
-
 
 # Cleaning
 clean: cleanb cleano cleanfifo
