@@ -6,10 +6,10 @@
   "Arguments incorrects.\n" \
   "utilisation: calcul-simple OPERATION [NOMBRES]..."
 
-#define ADDITION "addition"
-#define SOUSTRACTION "soustraction"
-#define MULTIPLICATION "multiplication"
-#define DIVISION "division"
+#define ADDITION "+"
+#define SOUSTRACTION "-"
+#define MULTIPLICATION "*"
+#define DIVISION "/"
 
 char *calcul_simple(int argc, char *argv[]);
 int check(int argc, char *argv[]);
