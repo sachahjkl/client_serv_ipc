@@ -9,16 +9,20 @@
 
 #include "../shared/result.h"
 #include "services/calcul_simple.h"
+#include "services/compteur_char.h"
+#include "services/compteur_mots.h"
+#include "services/proba_char.h"
+#include "services/proba_mots.h"
 
-const char *services[] = {CALCUL_SIMPLE, COMPTEUR_MOTS, PROBA_MOTS, PROBA_CHAR,
-                          SERVICES};
+const char *services[] = {CALCUL_SIMPLE, COMPTEUR_MOTS, COMPTEUR_CHAR,
+                          PROBA_MOTS,    PROBA_CHAR,    SERVICES};
 
 result start_service(message m) {
   result r;
   char *value = not_implemented();
   time_t start = clock();
   if (strcmp(m.service_name, CALCUL_SIMPLE) == 0) {
-    value = calcul_simple(m.argc, m.argv);
+    value = cs_calcul(m.argc, m.argv);
   } else if (strcmp(m.service_name, COMPTEUR_MOTS) == 0) {
     value = not_implemented();
   } else if (strcmp(m.service_name, PROBA_MOTS) == 0) {

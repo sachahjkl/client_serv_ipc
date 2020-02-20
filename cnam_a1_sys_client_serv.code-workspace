@@ -35,7 +35,8 @@
 			"tuple": "c",
 			"type_traits": "c",
 			"utility": "c",
-			"calcul_simple.h": "c"
+			"calcul_simple.h": "c",
+			"compteur_char.h": "c"
 		},
 		"clang-format.fallbackStyle": "Google"
 	}

@@ -15,8 +15,9 @@
 
 #define CALCUL_SIMPLE "calcul-simple"
 #define COMPTEUR_MOTS "compteur-mots"
+#define COMPTEUR_CHAR "compteur-char"
 #define PROBA_MOTS "proba-mots"
-#define PROBA_CHAR "proba_char"
+#define PROBA_CHAR "proba-char"
 #define SERVICES "services"
 
 result start_service(message m);

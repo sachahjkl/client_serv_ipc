@@ -33,14 +33,18 @@ FIFO_EXT = fifo
 all: serveur client
 
 # Serveur
-serveur: serveur.o service.o mq.o message.o log.o result.o calcul_simple.o
+serveur: serveur.o service.o mq.o message.o log.o result.o calcul_simple.o compteur_char.o compteur_mots.o proba_char.o  proba_mots.o
 	$(CC) $(CFLAGS) -o $(BIN)/serveur $(OBJ)/$< \
 	$(OBJ)/service.o \
 	$(OBJ)/mq.o \
 	$(OBJ)/message.o \
 	$(OBJ)/log.o \
 	$(OBJ)/result.o \
-	$(OBJ)/calcul_simple.o
+	$(OBJ)/calcul_simple.o \
+	$(OBJ)/compteur_char.o \
+	$(OBJ)/compteur_mots.o \
+	$(OBJ)/proba_char.o \
+	$(OBJ)/proba_mots.o 
 
 # Client
 client: client.o mq.o message.o log.o result.o

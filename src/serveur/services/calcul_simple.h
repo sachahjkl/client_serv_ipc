@@ -1,8 +1,8 @@
 #ifndef CALCUL_SIMPLE_H
 #define CALCUL_SIMPLE_H
 
-#define MAX_RES_STR 125
-#define USAGE               \
+#define CS_MAX_RES_STR 125
+#define CS_USAGE            \
   "Arguments incorrects.\n" \
   "utilisation: calcul-simple OPERATION [NOMBRES]..."
 
@@ -11,7 +11,7 @@
 #define MULTIPLICATION "*"
 #define DIVISION "/"
 
-char *calcul_simple(int argc, char *argv[]);
-int check(int argc, char *argv[]);
-char *methodes_calcul_simple();
+char *cs_calcul(int argc, char *argv[]);
+int cs_check(int argc, char *argv[]);
+char *cs_methodes();
 #endif
