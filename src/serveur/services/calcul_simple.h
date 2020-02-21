@@ -6,12 +6,12 @@
   "Arguments incorrects.\n" \
   "utilisation: calcul-simple OPERATION [NOMBRES]..."
 
-#define ADDITION "+"
-#define SOUSTRACTION "-"
-#define MULTIPLICATION "*"
-#define DIVISION "/"
+#define CS_ADDITION "+"
+#define CS_SOUSTRACTION "-"
+#define CS_MULTIPLICATION "*"
+#define CS_DIVISION "/"
 
-char *cs_calcul(int argc, char *argv[]);
-int cs_check(int argc, char *argv[]);
-char *cs_methodes();
+char *cs_calcul(char *__dest, const int argc, const char *argv[]);
+int cs_check(const int argc, const char *argv[]);
+char *cs_methodes(char *__dest);
 #endif

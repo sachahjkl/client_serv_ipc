@@ -36,7 +36,18 @@
 			"type_traits": "c",
 			"utility": "c",
 			"calcul_simple.h": "c",
-			"compteur_char.h": "c"
+			"compteur_char.h": "c",
+			"chrono": "c",
+			"random": "c",
+			"limits": "c",
+			"valarray": "c",
+			"algorithm": "c",
+			"cstdlib": "c",
+			"variant": "c",
+			"proba_char.h": "c",
+			"*.inc": "c",
+			"string.h": "c",
+			"ipc.h": "c"
 		},
 		"clang-format.fallbackStyle": "Google"
 	}

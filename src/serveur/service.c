@@ -14,80 +14,66 @@
 #include "services/proba_char.h"
 #include "services/proba_mots.h"
 
-const char *services[] = {CALCUL_SIMPLE, COMPTEUR_MOTS, COMPTEUR_CHAR,
-                          PROBA_MOTS,    PROBA_CHAR,    SERVICES};
+const char *services[] = {SE_CALCUL_SIMPLE, SE_COMPTEUR_MOTS, SE_COMPTEUR_CHAR,
+                          SE_PROBA_MOTS,    SE_PROBA_CHAR,    SE_SERVICES};
 
-result start_service(message m) {
-  result r;
-  char *value = not_implemented();
+result_t start_service(result_t __dest, const message_t __src) {
   time_t start = clock();
-  if (strcmp(m.service_name, CALCUL_SIMPLE) == 0) {
-    value = cs_calcul(m.argc, m.argv);
-  } else if (strcmp(m.service_name, COMPTEUR_MOTS) == 0) {
-    value = not_implemented();
-  } else if (strcmp(m.service_name, PROBA_MOTS) == 0) {
-    value = not_implemented();
-  } else if (strcmp(m.service_name, PROBA_CHAR) == 0) {
-    value = not_implemented();
-  } else if (strcmp(m.service_name, SERVICES) == 0) {
-    value = get_services();
+  if (strcmp(__src->service_name, SE_CALCUL_SIMPLE) == 0) {
+    cs_calcul(__dest->value, __src->argc, (const char **)__src->argv);
+  } else if (strcmp(__src->service_name, SE_COMPTEUR_MOTS) == 0) {
+    not_implemented(__dest->value);
+  } else if (strcmp(__src->service_name, SE_PROBA_MOTS) == 0) {
+    not_implemented(__dest->value);
+  } else if (strcmp(__src->service_name, SE_PROBA_CHAR) == 0) {
+    not_implemented(__dest->value);
+  } else if (strcmp(__src->service_name, SE_SERVICES) == 0) {
+    get_services(__dest->value);
   } else {
-    value = unknown_service();
+    unknown_service(__dest->value);
   }
 
   time_t end = clock();
   double time_spent = (double)(end - start) / CLOCKS_PER_SEC * 1000;
-  sprintf(r.time_spent, "%3.3lfms", time_spent);
-  strcpy(r.value, value);
-  free(value);
-  r.ram_used = get_memory(getpid());
-  return r;
+  sprintf(__dest->time_spent, "%3.3lfms", time_spent);
+  __dest->ram_used = get_memory(getpid());
+  return __dest;
 }
 
-char *unknown_service() {
-  char *value;
-  value = malloc(sizeof(char) * MAX_VALUE_LENGTH + 1);
-  strcpy(value, UNKOWN_SERVICE);
-  return value;
+char *unknown_service(char *__dest) {
+  strcpy(__dest, SE_UNKOWN_SERVICE);
+  return __dest;
 }
 
-char *not_implemented() {
-  char *value;
-  value = malloc(sizeof(char) * MAX_VALUE_LENGTH + 1);
-  strcpy(value, NOT_IMPLEMENTED);
-  return value;
+char *not_implemented(char *__dest) {
+  strcpy(__dest, SE_NOT_IMPLEMENTED);
+  return __dest;
 }
 
-char *get_services() {
-  char *value;
-  int size = sizeof(char) * MAX_VALUE_LENGTH + 1;
-  value = malloc(size);
-
-  const char S_SEPARATOR = ' ';
+char *get_services(char *__dest) {
+  const char S_M_SEPARATOR = ' ';
   int nb_services = sizeof(services) / sizeof(char *);
-  memset(value, '\0', size);
   for (int i = 0; i < nb_services - 1; i++) {
-    sprintf(value + strlen(value), "%s%c", services[i], S_SEPARATOR);
+    sprintf(__dest + strlen(__dest), "%s%c", services[i], S_M_SEPARATOR);
   }
-  sprintf(value + strlen(value), "%s", services[nb_services - 1]);
-
-  return value;
+  sprintf(__dest + strlen(__dest), "%s", services[nb_services - 1]);
+  return __dest;
 }
 
-long long int get_memory(pid_t pid) {
-  const int mem_size_pos = 23;
+long get_memory(pid_t pid) {
+  const int MEM_SIZE_POS = 23;
   char filename[FILENAME_MAX_LENGTH + 1];
-  char line[MAX_SERIALIZED_LENGTH + 1];
+  char line[M_MAX_SERIALIZED + 1];
   char *value;
   FILE *stat;
 
-  long long int mem_size = 0;
+  long mem_size = 0;
   sprintf(filename, PROC_FILE, pid);
 
   stat = fopen(filename, "r");
   fgets(line, sizeof(line), stat);
   value = strtok(line, " ");
-  for (int i = 0; i < mem_size_pos - 1 && value != NULL; i++) {
+  for (int i = 0; i < MEM_SIZE_POS - 1 && value != NULL; i++) {
     value = strtok(NULL, " ");
   }
   mem_size = atoll(value);

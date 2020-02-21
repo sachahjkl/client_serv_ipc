@@ -26,40 +26,51 @@ int send(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  message m;
-  strcpy(m.service_name, argv[0]);
-  m.argc = argc - 1;
-  m.argv = argv + 1;
+  message_t m = message_new();
+  strcpy(m->service_name, argv[0]);
+  m->argc = argc - 1;
+  char *tmp;
+  for (int i = 0; i < m->argc; i++) {
+    tmp = calloc(strlen(argv[i]) + 1, sizeof(char));
+    if (tmp != NULL) strcpy(tmp, argv[i + 1]);
+    m->argv[i] = tmp;
+  }
 
-  char m_buffer[MAX_SERIALIZED_LENGTH + 1];
-  char r_buffer[MAX_VALUE_LENGTH * 2 + FLOAT_SIZE + 1];
-  char **pipes = get_named_pipes();
+  char m_buffer[(M_MAX_SERVICE_NAME + 1) + (M_MAX_ARGS)];
+  char r_buffer[(R_MAX_VALUE + 1) + (R_MAX_TIME_SPENT + 1) * 2];
+  char *pipes[NB_PIPES];
+  pipes[0] = malloc(sizeof(char) * MQ_PIPES_LENGTH + 1);
+  pipes[1] = malloc(sizeof(char) * MQ_PIPES_LENGTH + 1);
+  get_named_pipes(pipes);
 
   errno = 0;
   int fd_write = open(pipes[0], O_WRONLY);
   int fd_read = open(pipes[1], O_RDONLY);
+  free(pipes[0]);
+  free(pipes[1]);
   if (errno != 0) {
     log_error("Erreur à l'ouverture des fifos : %s\n", strerror(errno));
     exit(EXIT_FAILURE);
   }
 
-  strcpy(m_buffer, m_serialize(m));
+  m_serialize(m_buffer, m);
+
   write(fd_write, m_buffer, sizeof(m_buffer));
   close(fd_write);
+  message_free(m);
 
   read(fd_read, r_buffer, sizeof(r_buffer));
   close(fd_read);
-  result r = r_deserialize(r_buffer);
-
+  result_t r = r_deserialize(result_new(), r_buffer);
   display_results(r);
+  result_free(r);
 
   return EXIT_SUCCESS;
 }
 
 // retournera toujours un tableau comportant les deux noms
 // des named pipes auxquels se connecter
-char **get_named_pipes() {
-  const int NB_PIPES = 2;
+char **get_named_pipes(char **__dest) {
   errno = 0;
   int msgid = init_MQ();
   if (msgid == -1) {
@@ -69,25 +80,20 @@ char **get_named_pipes() {
   }
   mq_buffer buffer;
 
-  char **pipes = malloc(sizeof(char *) * NB_PIPES);
-
-  pipes[0] = malloc(sizeof(char) * MAX_INSTR_LENGTH + 1);
-  pipes[1] = malloc(sizeof(char) * MAX_INSTR_LENGTH + 1);
-
-  buffer.mtype = TYPE_CLIENT;
-  strcpy(buffer.mtext, CONNECT_REQUEST_CODE);
-
+  buffer.mtype = MQ_TYPE_CLIENT;
+  strcpy(buffer.mtext, MQ_CONNECT_REQUEST_CODE);
   errno = 0;
   msgsnd(msgid, &buffer, sizeof(buffer.mtext), 1);
-  msgrcv(msgid, &buffer, sizeof(buffer.mtext), TYPE_SERVEUR, 0);
+  msgrcv(msgid, &buffer, sizeof(buffer.mtext), MQ_TYPE_SERVEUR, 0);
+
   if (errno != 0) {
     log_error("Erreur réception des tubes nommés : %s", strerror(errno));
     exit(EXIT_FAILURE);
   }
 
-  strcpy(pipes[0], strtok(buffer.mtext, SEPARATOR));
-  strcpy(pipes[1], strtok(NULL, SEPARATOR));
-  return pipes;
+  strcpy(__dest[0], strtok(buffer.mtext, M_SEPARATOR));
+  strcpy(__dest[1], strtok(NULL, M_SEPARATOR));
+  return __dest;
 }
 
 int check(int argc, char *argv[]) {
@@ -98,11 +104,8 @@ int check(int argc, char *argv[]) {
   return res;
 }
 
-void display_results(result r) {
-  printf("[Valeur]\n%s\n\n", r.value);
-  printf("[Temps passé]\n%s\n\n", r.time_spent);
-  printf("[Utilisation Mémoire]\n%ld kB\n\n", r.ram_used / 1024);
-
-  // TODO à compléter
-  return;
+void display_results(result_t r) {
+  printf("[Valeur]\n%s\n\n", r->value);
+  printf("[Temps passé]\n%s\n\n", r->time_spent);
+  printf("[Utilisation Mémoire]\n%ld kB\n\n", r->ram_used / 1024);
 }

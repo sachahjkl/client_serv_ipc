@@ -4,24 +4,37 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *r_serialize(result r) {
-  char *str = malloc(MAX_VALUE_LENGTH * 2 + FLOAT_SIZE + 1);
-  sprintf(str, "%s%s%s%s%ld", r.value, SEPARATOR, r.time_spent, SEPARATOR,
-          r.ram_used);
-  return str;
+char *r_serialize(char *__dest, const result_t __src) {
+  sprintf(__dest, "%s%s%s%s%ld", __src->value, R_SEPARATOR, __src->time_spent,
+          R_SEPARATOR, __src->ram_used);
+  return __dest;
 }
 
-result r_deserialize(char *string) {
-  result r;
-  char *tok = strtok(string, SEPARATOR);
+result_t r_deserialize(result_t __dest, const char *__src) {
+  char *dup = calloc(strlen(__src) + 1, sizeof(char));
+  if (dup != NULL) strcpy(dup, __src);
+  char *tok = strtok(dup, R_SEPARATOR);
   if (tok == NULL) {
     exit(EXIT_FAILURE);
   }
-  strcpy(r.value, tok);
-  tok = strtok(NULL, SEPARATOR);
-  strcpy(r.time_spent, tok);
-  tok = strtok(NULL, SEPARATOR);
-  r.ram_used = atol(tok);
+  strcpy(__dest->value, tok);
+  tok = strtok(NULL, R_SEPARATOR);
+  strcpy(__dest->time_spent, tok);
+  tok = strtok(NULL, R_SEPARATOR);
+  __dest->ram_used = atol(tok);
+  free(dup);
+  return __dest;
+}
 
+result_t result_new(void) {
+  result proto = {calloc(R_MAX_VALUE + 1, sizeof(char)),
+                  calloc(R_MAX_TIME_SPENT + 1, sizeof(char)), 0};
+  result_t r = malloc(sizeof(result));
+  *r = proto;
   return r;
+}
+
+void result_free(result_t r) {
+  free(r->time_spent);
+  free(r->value);
 }

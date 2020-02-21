@@ -5,8 +5,8 @@
 #include <sys/types.h>
 
 int init_MQ() {
-  fclose(fopen(PATHNAME, "w"));
+  fclose(fopen(MQ_PATHNAME, "w"));
   key_t key;
-  key = ftok(PATHNAME, PROJ_ID);
+  key = ftok(MQ_PATHNAME, MQ_PROJ_ID);
   return msgget(key, MQ_RIGHTS);
 }

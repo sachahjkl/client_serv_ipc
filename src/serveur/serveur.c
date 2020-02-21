@@ -36,14 +36,14 @@ int start() {
 }
 
 int process_connections(int msgid) {
-  signal(
-      SIGCHLD,
-      SIG_IGN);  // on ne fait rien des processus fils après leurs terminaison
+  // on ne fait rien des processus fils après leurs terminaison
+  signal(SIGCHLD, SIG_IGN);
   while (1) {
     mq_buffer buffer;
     log_info("listening...", NULL);
-    if (msgrcv(msgid, &buffer, sizeof(buffer.mtext), TYPE_CLIENT, 0) > 0) {
-      if (strcmp(CONNECT_REQUEST_CODE, buffer.mtext) == 0) {
+
+    if (msgrcv(msgid, &buffer, sizeof(buffer.mtext), MQ_TYPE_CLIENT, 0) > 0) {
+      if (strcmp(MQ_CONNECT_REQUEST_CODE, buffer.mtext) == 0) {
         int id = fork();
         int client_id = client_counter++;
         if (id == 0) {
@@ -63,45 +63,53 @@ int process_connections(int msgid) {
 
 int handle_connection(int msgid, int client_id) {
   mq_buffer buffer;
-  buffer.mtype = TYPE_SERVEUR;
+  buffer.mtype = MQ_TYPE_SERVEUR;
 
   log_info("Traitement connexion n°%d", client_id);
 
-  char pathname_read[MAX_INSTR_LENGTH + 1];
-  char pathname_write[MAX_INSTR_LENGTH + 1];
-  char pathnames[(MAX_INSTR_LENGTH + 1) * 2];
+  char pathname_read[M_MAX_SERVICE_NAME + 1];
+  char pathname_write[M_MAX_SERVICE_NAME + 1];
+  char pathnames[(M_MAX_SERVICE_NAME + 1) * 2];
 
-  sprintf(pathname_read, "%s/read_%d%s", DIR, client_id, NAMED_PIPE_SUFFIX);
-  sprintf(pathname_write, "%s/write_%d%s", DIR, client_id, NAMED_PIPE_SUFFIX);
+  sprintf(pathname_read, "%s/read_%d%s", MQ_DIR, client_id,
+          M_NAMED_PIPE_SUFFIX);
+  sprintf(pathname_write, "%s/write_%d%s", MQ_DIR, client_id,
+          M_NAMED_PIPE_SUFFIX);
 
   remove(pathname_read);
   remove(pathname_write);
 
   errno = 0;
-  mkfifo(pathname_read, PERMISSION_FIFO);
-  mkfifo(pathname_write, PERMISSION_FIFO);
+  mkfifo(pathname_read, M_PERMISSION_FIFO);
+  mkfifo(pathname_write, M_PERMISSION_FIFO);
   if (errno != 0) {
     log_error("Erreur à la création des fifos : %s", strerror(errno));
     exit(EXIT_FAILURE);
   }
 
-  sprintf(pathnames, "%s%s%s", pathname_read, SEPARATOR, pathname_write);
-  buffer.mtype = TYPE_SERVEUR;
+  sprintf(pathnames, "%s%s%s", pathname_read, M_SEPARATOR, pathname_write);
+  buffer.mtype = MQ_TYPE_SERVEUR;
   strcpy(buffer.mtext, pathnames);
   msgsnd(msgid, &buffer, sizeof(buffer.mtext), 1);
 
   int fd_read = open(pathname_read, O_RDONLY);
   int fd_write = open(pathname_write, O_WRONLY);
 
-  char m_buffer[MAX_SERIALIZED_LENGTH + 1];
+  char m_buffer[(M_MAX_SERVICE_NAME + 1) + (M_MAX_ARGS)];
+  char r_buffer[(R_MAX_VALUE + 1) + (R_MAX_TIME_SPENT + 1) * 2];
+
   read(fd_read, m_buffer, sizeof(m_buffer));
-  message m = m_deserialize(m_buffer);
+  message_t m = message_new();
+  m_deserialize(m, m_buffer);
   close(fd_read);
   unlink(pathname_read);
 
-  result r = start_service(m);
-  char *r_buffer = r_serialize(r);
+  result_t r = result_new();
+  start_service(r, m);
+  message_free(m);
+  r_serialize(r_buffer, r);
   write(fd_write, r_buffer, strlen(r_buffer));
+  result_free(r);
   close(fd_write);
   unlink(pathname_write);
   errno = 0;
