@@ -16,6 +16,8 @@
 #include "../shared/result.h"
 #include "service.h"
 
+void log_result(const result_t r);
+
 int main(int argc, char *argcv[]) { return start(); }
 
 int start() {
@@ -50,7 +52,8 @@ int process_connections(int msgid) {
           // On charge le fils qui vient d'être créé de s'occuper
           // de la connexion avec le client demandant un service
           int ret = handle_connection(msgid, client_id);
-          log_info("Fin du traitement connexion n°%d - %d", client_id, ret);
+          log_info("Fin du traitement connexion n°%d - code retour: %d",
+                   client_id, ret);
           exit(ret);
         } else if (id < 0) {
           exit(EXIT_FAILURE);
@@ -106,6 +109,7 @@ int handle_connection(int msgid, int client_id) {
 
   result_t r = result_new();
   start_service(r, m);
+  log_result(r);
   message_free(m);
   r_serialize(r_buffer, r);
   write(fd_write, r_buffer, strlen(r_buffer));
@@ -114,4 +118,16 @@ int handle_connection(int msgid, int client_id) {
   unlink(pathname_write);
   errno = 0;
   return EXIT_SUCCESS;
+}
+
+// On retire les nouvelles lignes pour l'affichage du resultat dans le log
+void log_result(const result_t r) {
+  char tmp[R_MAX_VALUE + 1];
+  strcpy(tmp, r->value);
+  char *newline = strchr(tmp, '\n');
+  while (newline != NULL) {
+    *newline = ';';
+    newline = strchr(tmp, '\n');
+  }
+  log_info("Resultat du traitement : \"%s\"", tmp);
 }

@@ -1,22 +1,36 @@
 #!/bin/sh
-NB_CYCLES="${NB_CYCLES:-100}"
+
+# CONSTANTES
 LOGS="./logs"
 BIN="./bin"
 CLIENT="client"
 SERVEUR="serveur"
 
-"${BIN}/$SERVEUR" &>> "${LOGS}/${SERVEUR}_test.log" &
+# Fonctions
 
-client_cs(){
-"${BIN}/${CLIENT}" calcul-simple + 0x12 0x23 >> "${LOGS}/${CLIENT}_test.log" & 
+client_cs_add(){
+"${BIN}/${CLIENT}" calcul-simple + $RANDOM $RANDOM >> "${LOGS}/${CLIENT}_test.log" & 
+}
+client_cs_mul(){
+"${BIN}/${CLIENT}" calcul-simple \* $RANDOM $RANDOM >> "${LOGS}/${CLIENT}_test.log" & 
 }
 
-echo "Lancement de $NB_CYCLES client(s) en parallèles"
-for i in $(eval echo "{1..$NB_CYCLES}") 
-do 
-	client_cs && echo "fin du ${i}eme client" &
-done
+start_serveur(){
+	"${BIN}/$SERVEUR" &>> "${LOGS}/${SERVEUR}_test.log" &
+}
 
-kill -n9 $(pidof $SERVEUR)
+start_test(){
+	CYCLES="${1-100}"
+	start_serveur
+	echo "Lancement de $CYCLES client(s) en parallèles"
+	for (( i=1; i<=$CYCLES; i++ ))
+	do 
+		client_cs_add && echo "fin du ${i}eme client" &
+	done
+	kill -n9 $(pidof $SERVEUR)
+	echo "Fin du test"
+}
+# ---
 
-echo "Fin du test"
+start_test "$@"; exit
+
