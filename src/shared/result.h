@@ -1,7 +1,7 @@
 #ifndef RESULT_H
 #define RESULT_H
 
-#define R_MAX_VALUE 1023
+#define R_MAX_VALUE 4095
 #define R_MAX_TIME_SPENT 1023
 #define R_SEPARATOR "|"
 typedef struct result {

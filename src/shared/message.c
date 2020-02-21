@@ -31,31 +31,33 @@ message_t m_deserialize(message_t __dest, const char *__src) {
   if (tok == NULL) {
     exit(EXIT_FAILURE);
   }
-  strcpy(__dest->service_name, tok);
+  strncpy(__dest->service_name, tok, M_MAX_SERVICE_NAME + 1);
 
   tok = strtok(NULL, M_SEPARATOR);
   while (tok != NULL && i < M_MAX_ARGS) {
-    __dest->argv[i] = calloc(strlen(tok) + 1, sizeof(char));
-    strcpy(__dest->argv[i++], tok);
+    strncpy(__dest->argv[i++], tok, M_MAX_ARG + 1);
     tok = strtok(NULL, M_SEPARATOR);
   }
 
-  __dest->argv = realloc(__dest->argv, sizeof(char *) * i);
   __dest->argc = i;
+
   free(dup);
   return __dest;
 }
 
 message_t message_new(void) {
   message proto = {calloc(M_MAX_SERVICE_NAME + 1, sizeof(char)),
-                   calloc(M_MAX_ARGS + 1, sizeof(char *)), 0};
+                   calloc(M_MAX_ARGS, sizeof(char *)), 0};
+  for (int i = 0; i < M_MAX_ARGS; i++) {
+    proto.argv[i] = calloc(M_MAX_ARG + 1, sizeof(char));
+  }
   message_t m = malloc(sizeof(message));
   *m = proto;
   return m;
 }
 
 void message_free(message_t m) {
-  for (int i = 0; i < m->argc; i++) {
+  for (int i = 0; i < M_MAX_ARGS; i++) {
     free(m->argv[i]);
   }
   free(m->argv);

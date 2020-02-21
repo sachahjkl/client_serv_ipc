@@ -20,7 +20,7 @@ void log_result(const result_t r);
 
 int main(int argc, char *argcv[]) { return start(); }
 
-int start() {
+int start(void) {
   // TODO réécrire le signal handler pour les SIG_INT/TERM
   errno = 0;
 
@@ -98,12 +98,14 @@ int handle_connection(int msgid, int client_id) {
   int fd_read = open(pathname_read, O_RDONLY);
   int fd_write = open(pathname_write, O_WRONLY);
 
-  char m_buffer[(M_MAX_SERVICE_NAME + 1) + (M_MAX_ARGS)];
+  char m_buffer[(M_MAX_SERVICE_NAME + 1) + (M_MAX_ARGS * (M_MAX_ARG + 1))];
   char r_buffer[(R_MAX_VALUE + 1) + (R_MAX_TIME_SPENT + 1) * 2];
 
   read(fd_read, m_buffer, sizeof(m_buffer));
   message_t m = message_new();
+
   m_deserialize(m, m_buffer);
+
   close(fd_read);
   unlink(pathname_read);
 
@@ -114,6 +116,7 @@ int handle_connection(int msgid, int client_id) {
   r_serialize(r_buffer, r);
   write(fd_write, r_buffer, strlen(r_buffer));
   result_free(r);
+
   close(fd_write);
   unlink(pathname_write);
   errno = 0;

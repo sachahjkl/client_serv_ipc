@@ -17,9 +17,9 @@ result_t r_deserialize(result_t __dest, const char *__src) {
   if (tok == NULL) {
     exit(EXIT_FAILURE);
   }
-  strcpy(__dest->value, tok);
+  strncpy(__dest->value, tok, R_MAX_VALUE + 1);
   tok = strtok(NULL, R_SEPARATOR);
-  strcpy(__dest->time_spent, tok);
+  strncpy(__dest->time_spent, tok, R_MAX_TIME_SPENT + 1);
   tok = strtok(NULL, R_SEPARATOR);
   __dest->ram_used = atol(tok);
   free(dup);

@@ -26,21 +26,11 @@ int send(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  message_t m = message_new();
-  strcpy(m->service_name, argv[0]);
-  m->argc = argc - 1;
-  char *tmp;
-  for (int i = 0; i < m->argc; i++) {
-    tmp = calloc(strlen(argv[i]) + 1, sizeof(char));
-    if (tmp != NULL) strcpy(tmp, argv[i + 1]);
-    m->argv[i] = tmp;
-  }
-
-  char m_buffer[(M_MAX_SERVICE_NAME + 1) + (M_MAX_ARGS)];
+  char m_buffer[(M_MAX_SERVICE_NAME + 1) + (M_MAX_ARGS * (M_MAX_ARG + 1))];
   char r_buffer[(R_MAX_VALUE + 1) + (R_MAX_TIME_SPENT + 1) * 2];
   char *pipes[NB_PIPES];
-  pipes[0] = malloc(sizeof(char) * MQ_PIPES_LENGTH + 1);
-  pipes[1] = malloc(sizeof(char) * MQ_PIPES_LENGTH + 1);
+  pipes[0] = calloc(MQ_PIPES_LENGTH + 1, sizeof(char));
+  pipes[1] = calloc(MQ_PIPES_LENGTH + 1, sizeof(char));
   get_named_pipes(pipes);
 
   errno = 0;
@@ -53,6 +43,13 @@ int send(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
+  message_t m = message_new();
+  strncpy(m->service_name, argv[0], M_MAX_SERVICE_NAME + 1);
+  m->argc = argc - 1;
+  for (int i = 0; i < m->argc; i++) {
+    strncpy(m->argv[i], argv[i + 1], M_MAX_ARG + 1);
+  }
+
   m_serialize(m_buffer, m);
 
   write(fd_write, m_buffer, sizeof(m_buffer));
@@ -61,6 +58,7 @@ int send(int argc, char *argv[]) {
 
   read(fd_read, r_buffer, sizeof(r_buffer));
   close(fd_read);
+
   result_t r = r_deserialize(result_new(), r_buffer);
   display_results(r);
   result_free(r);
@@ -91,8 +89,8 @@ char **get_named_pipes(char **__dest) {
     exit(EXIT_FAILURE);
   }
 
-  strcpy(__dest[0], strtok(buffer.mtext, M_SEPARATOR));
-  strcpy(__dest[1], strtok(NULL, M_SEPARATOR));
+  strncpy(__dest[0], strtok(buffer.mtext, M_SEPARATOR), MQ_PIPES_LENGTH + 1);
+  strncpy(__dest[1], strtok(NULL, M_SEPARATOR), MQ_PIPES_LENGTH + 1);
   return __dest;
 }
 

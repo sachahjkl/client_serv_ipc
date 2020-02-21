@@ -11,8 +11,22 @@
 # lien utile : https://gl.developpez.com/tutoriel/outil/makefile/
 
 # Compiler settings - Can be customized.
+DEBUG=1
+
 CC = gcc
-CFLAGS = -std=c11 -Wall
+
+CFLAGS = -std=c11 -Wall -Wextra -Wpedantic \
+          -Wformat=2 -Wno-unused-parameter -Wshadow \
+          -Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
+          -Wredundant-decls -Wnested-externs -Wmissing-include-dirs
+
+ifdef $(DEBUG)
+	CFLAGS += -g
+endif
+# GCC warnings that Clang doesn't provide:
+ifeq ($(CC),gcc)
+    CFLAGS += -Wjump-misses-init -Wlogical-op
+endif
 
 # Makefile settings - Can be customized.
 SRC = src
@@ -33,13 +47,14 @@ FIFO_EXT = fifo
 all: serveur client
 
 # Serveur
-serveur: serveur.o service.o mq.o message.o log.o result.o calcul_simple.o compteur_char.o compteur_mots.o proba_char.o  proba_mots.o
+serveur: serveur.o service.o mq.o message.o log.o result.o dictionary.o calcul_simple.o compteur_char.o compteur_mots.o proba_char.o  proba_mots.o 
 	$(CC) $(CFLAGS) -o $(BIN)/serveur $(OBJ)/$< \
 	$(OBJ)/service.o \
 	$(OBJ)/mq.o \
 	$(OBJ)/message.o \
 	$(OBJ)/log.o \
 	$(OBJ)/result.o \
+	$(OBJ)/dictionary.o \
 	$(OBJ)/calcul_simple.o \
 	$(OBJ)/compteur_char.o \
 	$(OBJ)/compteur_mots.o \

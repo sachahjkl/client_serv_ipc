@@ -47,7 +47,9 @@
 			"proba_char.h": "c",
 			"*.inc": "c",
 			"string.h": "c",
-			"ipc.h": "c"
+			"ipc.h": "c",
+			"dictionary.h": "c",
+			"proba_mots.h": "c"
 		},
 		"clang-format.fallbackStyle": "Google"
 	}

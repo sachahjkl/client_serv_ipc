@@ -18,6 +18,6 @@ typedef struct mq_buffer {
   char mtext[MQ_MAX_TEXT + 1];
 } mq_buffer;
 
-int init_MQ();
+int init_MQ(void);
 
 #endif

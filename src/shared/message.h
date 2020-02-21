@@ -7,13 +7,13 @@
 #define M_MAX_SERIALIZED 1023
 #define M_SEPARATOR "|"
 #define M_MAX_ARGS 32
-#define M_MAX_ARG 32
+#define M_MAX_ARG 110
 #define M_PERMISSION_FIFO 0666
 
 typedef struct message {
   char *service_name;
   char **argv;
-  unsigned int argc;
+  int argc;
 } message, *message_t;
 
 char *m_serialize(char *__dest, const message_t __src);
