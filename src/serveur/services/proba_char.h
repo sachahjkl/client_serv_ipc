@@ -7,7 +7,8 @@
   "Arguments incorrects.\n" \
   "utilisation: proba-char OPERATION [NOMBRES]..."
 
-char *pc_calcul(int argc, char *argv[]);
-int pc_check(int argc, char *argv[]);
+char *pc_calcul(char *__dest, const int argc, const char *argv[]);
+
+int pc_check(const int argc, const char *argv[]);
 
 #endif

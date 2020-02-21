@@ -6,9 +6,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-char *pc_calcul(int argc, char *argv[]) { return ""; }
+char *pc_calcul(char *__dest, const int argc, const char *argv[]) { return ""; }
 
-int pc_check(int argc, char *argv[]) {
+int pc_check(const int argc, const char *argv[]) {
   int res = EXIT_SUCCESS;
   return res;
 }

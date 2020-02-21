@@ -7,7 +7,8 @@
   "Arguments incorrects.\n" \
   "utilisation: compteur-char OPERATION [NOMBRES]..."
 
-char *cc_calcul(int argc, char *argv[]);
-int cc_check(int argc, char *argv[]);
+char *cc_calcul(char *__dest, const int argc, const char *argv[]);
+
+int cc_check(const int argc, const char *argv[]);
 
 #endif

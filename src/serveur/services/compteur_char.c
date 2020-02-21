@@ -6,9 +6,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-char *cc_calcul(int argc, char *argv[]) { return ""; }
+char *cc_calcul(char *__dest, const int argc, const char *argv[]) { return ""; }
 
-int cc_check(int argc, char *argv[]) {
+int cc_check(const int argc, const char *argv[]) {
   int res = EXIT_SUCCESS;
   return res;
 }

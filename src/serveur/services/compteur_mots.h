@@ -7,7 +7,7 @@
   "Arguments incorrects.\n" \
   "utilisation: compteur-mots OPERATION [NOMBRES]..."
 
-char *cm_calcul(int argc, char *argv[]);
-int cm_check(int argc, char *argv[]);
+char *cm_calcul(char *__dest, const int argc, const char *argv[]);
 
+int cm_check(const int argc, const char *argv[]);
 #endif

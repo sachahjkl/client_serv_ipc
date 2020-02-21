@@ -6,9 +6,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-char *pm_calcul(int argc, char *argv[]) { return ""; }
+char *pm_calcul(char *__dest, const int argc, const char *argv[]) { return ""; }
 
-int pm_check(int argc, char *argv[]) {
+int pm_check(const int argc, const char *argv[]) {
   int res = EXIT_SUCCESS;
   return res;
 }
