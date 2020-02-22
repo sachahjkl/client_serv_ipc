@@ -1,8 +1,6 @@
 #ifndef PROBA_CHAR_H
 #define PROBA_CHAR_H
 
-#define PC_MAX_RES_STR 511
-
 #define PC_USAGE            \
   "Arguments incorrects.\n" \
   "utilisation: proba-char OPERATION [NOMBRES]..."
