@@ -22,7 +22,7 @@ result_t start_service(result_t __dest, const message_t __src) {
   if (strcmp(__src->service_name, SE_CALCUL_SIMPLE) == 0) {
     cs_calcul(__dest->value, __src->argc, (const char **)__src->argv);
   } else if (strcmp(__src->service_name, SE_COMPTEUR_MOTS) == 0) {
-    not_implemented(__dest->value);
+    cm_calcul(__dest->value, __src->argc, (const char **)__src->argv);
   } else if (strcmp(__src->service_name, SE_COMPTEUR_CHAR) == 0) {
     cc_calcul(__dest->value, __src->argc, (const char **)__src->argv);
   } else if (strcmp(__src->service_name, SE_PROBA_MOTS) == 0) {

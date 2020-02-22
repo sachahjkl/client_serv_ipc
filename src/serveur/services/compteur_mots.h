@@ -5,6 +5,7 @@
 #define CM_TEXT "text"
 #define CM_COL_KEY_NAME "mots"
 #define CM_COL_VAL_NAME "compte"
+#define CM_MAX_LINE_LENGTH 4096
 
 #define CM_USAGE            \
   "Arguments incorrects.\n" \

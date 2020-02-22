@@ -13,7 +13,9 @@
 
 char *cm_from_file(char *__dest, const int argc, const char *argv[]);
 char *cm_from_text(char *__dest, const int argc, const char *argv[]);
-dictionary_t cm_process_line(dictionary_t __dest, const char *line);
+dictionary_t cm_process_line(dictionary_t __dest, const char *line,
+                             const ssize_t len);
+char *cm_sanitize_str(char *__dest, const ssize_t len);
 
 char *cm_calcul(char *__dest, const int argc, const char *argv[]) {
 #define CM_MAX_METHODES 256
@@ -64,7 +66,7 @@ char *cm_from_file(char *__dest, const int argc, const char *argv[]) {
     return __dest;
   }
   while ((read = getline(&line, &len, fp)) != -1) {
-    cm_process_line(dico, line);
+    cm_process_line(dico, line, read);
   }
   dict_str(__dest, dico, CM_COL_KEY_NAME, CM_COL_VAL_NAME);
   fclose(fp);
@@ -74,22 +76,35 @@ char *cm_from_file(char *__dest, const int argc, const char *argv[]) {
 char *cm_from_text(char *__dest, const int argc, const char *argv[]) {
   dictionary_t dico = dict_new();
   for (int i = 1; i < argc; i++) {
-    cm_process_line(dico, argv[i]);
+    cm_process_line(dico, argv[i], strlen(argv[i]));
   }
   // sprintf(__dest, "%d -- %d\n", largest_key, largest_value);
   dict_str(__dest, dico, CM_COL_KEY_NAME, CM_COL_VAL_NAME);
   return __dest;
 }
 
-dictionary_t cm_process_line(dictionary_t __dest, const char *line) {
-  int line_length = strlen(line);
-  for (int i = 0; i < line_length; i++) {
-    if (isspace(line[i]) == 0) {
-      char key[] = {line[i], '\0'};
-      double value = dict_find(__dest, key, 0) + 1;
+dictionary_t cm_process_line(dictionary_t __dest, const char *line,
+                             const ssize_t len) {
+  char *buf = calloc(len + 1, sizeof(char));
+  snprintf(buf, len + 1, "%s", line);
+  cm_sanitize_str(buf, len + 1);
+  char *tok = strtok(buf, " \t");
+  int i = 0;
 
-      dict_add(__dest, key, value);
+  while (tok) {
+    double value = dict_find(__dest, tok, 0) + 1;
+    dict_add(__dest, tok, value);
+    tok = strtok(NULL, " \t");
+  }
+  return __dest;
+}
+
+char *cm_sanitize_str(char *__dest, const ssize_t len) {
+  for (int i = 0; i < len; i++) {
+    if (ispunct(__dest[i])) {
+      __dest[i] = ' ';
     }
+    __dest[i] = tolower(__dest[i]);
   }
   return __dest;
 }
