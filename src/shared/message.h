@@ -5,7 +5,7 @@
 #define M_NAMED_PIPE_SUFFIX "_client.fifo"
 #define M_MAX_SERVICE_NAME 255
 #define M_MAX_SERIALIZED 1023
-#define M_SEPARATOR "|"
+#define M_SEPARATOR "\t"
 #define M_MAX_ARGS 32
 #define M_MAX_ARG 110
 #define M_PERMISSION_FIFO 0666

@@ -113,6 +113,7 @@ int handle_connection(int msgid, int client_id) {
   start_service(r, m);
   log_result(r);
   message_free(m);
+
   r_serialize(r_buffer, r);
   write(fd_write, r_buffer, strlen(r_buffer));
   result_free(r);

@@ -11,10 +11,11 @@
 char *m_serialize(char *__dest, const message_t __src) {
   sprintf(__dest, "%s%s", __src->service_name, M_SEPARATOR);
   if (__src->argc != 0) {
-    for (int i = 0; i < __src->argc - 1; i++) {
+    int i = 0;
+    for (; i < __src->argc - 1; i++) {
       sprintf(__dest + strlen(__dest), "%s%s", __src->argv[i], M_SEPARATOR);
     }
-    strcat(__dest, __src->argv[__src->argc - 1]);
+    sprintf(__dest + strlen(__dest), "%s", __src->argv[i]);
   }
   return __dest;
 }

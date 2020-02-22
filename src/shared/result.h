@@ -3,7 +3,7 @@
 
 #define R_MAX_VALUE 4095
 #define R_MAX_TIME_SPENT 1023
-#define R_SEPARATOR "|"
+#define R_SEPARATOR "\t"
 typedef struct result {
   char *value;
   char *time_spent;

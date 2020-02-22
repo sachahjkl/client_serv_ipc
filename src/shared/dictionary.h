@@ -3,6 +3,8 @@
 
 #define D_INDEX_NOT_FOUND -1
 #define D_MAX_DOUBLE_STR 32
+#define D_COL_SEPARATOR "|"
+#define D_LINE_SEPARATOR "-"
 
 extern int largest_value;
 extern int largest_key;
@@ -28,6 +30,7 @@ dictionary_t dict_new(void);
 
 void dict_free(dictionary_t dict);
 
-char *dict_str(char *__dest, dictionary_t dict);
+char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
+               const char *__value_col_name);
 
 #endif

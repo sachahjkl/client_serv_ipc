@@ -8,13 +8,10 @@ int largest_value = 0;
 int largest_key = 0;
 
 void dict_update_widths(const char *key, double value);
-/* ajout manuel de la fonction strdup() car seulement dispo sur les impl POSIX
-du C */
-char *strdup(const char *c) {
-  char *dup = calloc(strlen(c) + 1, sizeof(char));
-  if (dup != NULL) strcpy(dup, c);
-  return dup;
-}
+char *replace_char(char *str, char find, char replace);
+/* ajout manuel de la fonction strdup() car seulement dispo sur les impl
+POSIX du C */
+char *strdup(const char *c);
 
 int dict_find_index(dictionary_t dict, const char *key) {
   for (int i = 0; i < dict->length; i++) {
@@ -64,10 +61,28 @@ void dict_free(dictionary_t dict) {
   free(dict);
 }
 
-char *dict_str(char *__dest, dictionary_t dict) {
-  // sprintf(buf, "%.2lf", value);
-  printf(" largest_value : %d", largest_value);
-  printf(" largest_key : %d", largest_key);
+char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
+               const char *__value_col_name) {
+  if (__key_col_name != NULL && __value_col_name != NULL) {
+    sprintf(__dest, "%s %*s %s %*s %s\n", D_COL_SEPARATOR, largest_key,
+            __key_col_name, D_COL_SEPARATOR, largest_value, __value_col_name,
+            D_COL_SEPARATOR);
+    sprintf(__dest + strlen(__dest), "%s%.*d+%.*d%s\n", D_COL_SEPARATOR,
+            (largest_key + 2), 0, (largest_value + 2), 0, D_COL_SEPARATOR);
+    replace_char(__dest, '0', D_LINE_SEPARATOR[0]);
+  }
+
+  if (dict->length != 0) {
+    int i = 0;
+    for (; i < dict->length - 1; i++) {
+      sprintf(__dest + strlen(__dest), "%s %*s %s %*.2lf %s\n", D_COL_SEPARATOR,
+              largest_key, dict->entries[i].key, D_COL_SEPARATOR, largest_value,
+              dict->entries[i].value, D_COL_SEPARATOR);
+    }
+    sprintf(__dest + strlen(__dest), "%s %*s %s %*.2lf %s\n", D_COL_SEPARATOR,
+            largest_key, dict->entries[i].key, D_COL_SEPARATOR, largest_value,
+            dict->entries[i].value, D_COL_SEPARATOR);
+  }
   return __dest;
 }
 
@@ -86,4 +101,20 @@ void dict_update_widths(const char *key, double value) {
   if (largest_value < value_width) {
     largest_value = value_width;
   }
+}
+
+// Local
+
+char *replace_char(char *str, char find, char replace) {
+  char *current_pos = strchr(str, find);
+  for (char *p = current_pos; (current_pos = strchr(str, find)) != NULL;
+       *current_pos = replace)
+    ;
+  return str;
+}
+
+char *strdup(const char *c) {
+  char *dup = calloc(strlen(c) + 1, sizeof(char));
+  if (dup != NULL) strcpy(dup, c);
+  return dup;
 }
