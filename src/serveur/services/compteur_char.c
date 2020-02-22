@@ -1,6 +1,8 @@
 #include "compteur_char.h"
 
+#define _GNU_SOURCE
 #include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,6 +47,25 @@ char *cc_modes(char *__dest) {
 }
 
 char *cc_from_file(char *__dest, const int argc, const char *argv[]) {
+  dictionary_t dico = dict_new();
+  FILE *fp;
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+  char *filename = argv[1];
+  fp = fopen(filename, "r");
+  printf("--|%s|--\n", filename);
+  if (fp == NULL) {
+    sprintf(__dest, "Le fichier n'a pas pu être ouvert :\n%s\n",
+            strerror(errno));
+    return __dest;
+  }
+  while ((read = getline(&line, &len, fp)) != -1) {
+    cc_process_line(dico, line);
+  }
+  dict_str(__dest, dico, CC_COL_KEY_NAME, CC_COL_VAL_NAME);
+  fclose(fp);
+  if (line) free(line);
   return __dest;
 }
 char *cc_from_text(char *__dest, const int argc, const char *argv[]) {

@@ -9,7 +9,7 @@
 
 #define CC_USAGE            \
   "Arguments incorrects.\n" \
-  "utilisation: compteur-char MODE SRC"
+  "utilisation: compteur-char MODE SRC[...]"
 
 char *cc_calcul(char *__dest, const int argc, const char *argv[]);
 
