@@ -42,7 +42,6 @@ char *cs_calcul(char *__dest, const int argc, const char *argv[]) {
     if (argc >= 3) {
       double orig = res;
       int pow = atoi(argv[2]);
-      printf("---> %d\n", pow);
       if (pow > 0) {
         for (int i = 1; i < pow; i++) {
           res *= orig;
