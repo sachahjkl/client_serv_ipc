@@ -23,6 +23,9 @@ char *cc_calcul(char *__dest, const int argc, const char *argv[]) {
     sprintf(__dest, "%s\n%s", CC_USAGE, methodes);
     return __dest;
   }
+  largest_key = strlen(CC_COL_KEY_NAME);
+  largest_value = strlen(CC_COL_VAL_NAME);
+
   if (strcmp(argv[0], CC_FILE) == 0) {
     cc_from_file(__dest, argc, argv);
   } else if (strcmp(argv[0], CC_TEXT) == 0) {
@@ -54,7 +57,6 @@ char *cc_from_file(char *__dest, const int argc, const char *argv[]) {
   ssize_t read;
   char *filename = argv[1];
   fp = fopen(filename, "r");
-  printf("--|%s|--\n", filename);
   if (fp == NULL) {
     sprintf(__dest, "Le fichier n'a pas pu être ouvert :\n%s\n",
             strerror(errno));
@@ -70,8 +72,7 @@ char *cc_from_file(char *__dest, const int argc, const char *argv[]) {
 }
 char *cc_from_text(char *__dest, const int argc, const char *argv[]) {
   dictionary_t dico = dict_new();
-  largest_key = strlen(CC_COL_KEY_NAME);
-  largest_value = strlen(CC_COL_VAL_NAME);
+
   for (int i = 1; i < argc; i++) {
     cc_process_line(dico, argv[i]);
   }

@@ -9,6 +9,7 @@ int largest_key = 0;
 
 void dict_update_widths(const char *key, double value);
 char *replace_char(char *str, char find, char replace);
+char *dict_line_str(char *__dest);
 /* ajout manuel de la fonction strdup() car seulement dispo sur les impl
 POSIX du C */
 char *strdup(const char *c);
@@ -63,15 +64,16 @@ void dict_free(dictionary_t dict) {
 
 char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
                const char *__value_col_name) {
+  dict_line_str(__dest);
+  // header generation
   if (__key_col_name != NULL && __value_col_name != NULL) {
-    sprintf(__dest, "%s %*s %s %*s %s\n", D_COL_SEPARATOR, largest_key,
-            __key_col_name, D_COL_SEPARATOR, largest_value, __value_col_name,
-            D_COL_SEPARATOR);
-    sprintf(__dest + strlen(__dest), "%s%.*d+%.*d%s\n", D_COL_SEPARATOR,
-            (largest_key + 2), 0, (largest_value + 2), 0, D_COL_SEPARATOR);
-    replace_char(__dest, '0', D_LINE_SEPARATOR[0]);
+    sprintf(__dest + strlen(__dest), "%s %*s %s %*s %s\n", D_COL_SEPARATOR,
+            largest_key, __key_col_name, D_COL_SEPARATOR, largest_value,
+            __value_col_name, D_COL_SEPARATOR);
+    dict_line_str(__dest);
   }
 
+  // content generation
   if (dict->length != 0) {
     int i = 0;
     for (; i < dict->length - 1; i++) {
@@ -82,7 +84,10 @@ char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
     sprintf(__dest + strlen(__dest), "%s %*s %s %*.2lf %s\n", D_COL_SEPARATOR,
             largest_key, dict->entries[i].key, D_COL_SEPARATOR, largest_value,
             dict->entries[i].value, D_COL_SEPARATOR);
+
+    dict_line_str(__dest);
   }
+
   return __dest;
 }
 
@@ -117,4 +122,12 @@ char *strdup(const char *c) {
   char *dup = calloc(strlen(c) + 1, sizeof(char));
   if (dup != NULL) strcpy(dup, c);
   return dup;
+}
+
+char *dict_line_str(char *__dest) {
+  char line[256];
+  sprintf(line, "+%.*d+%.*d+", (largest_key + 2), 0, (largest_value + 2), 0);
+  replace_char(line, '0', D_LINE_SEPARATOR[0]);
+  sprintf(__dest + strlen(__dest), "%s\n", line);
+  return __dest;
 }
