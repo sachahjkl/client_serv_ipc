@@ -57,9 +57,8 @@ char *cm_from_file(char *__dest, const int argc, const char *argv[]) {
   char *line = NULL;
   size_t len = 0;
   ssize_t read;
-  char *filename = argv[1];
+  const char *filename = argv[1];
   fp = fopen(filename, "r");
-  printf("--|%s|--\n", filename);
   if (fp == NULL) {
     sprintf(__dest, "Le fichier n'a pas pu être ouvert :\n%s\n",
             strerror(errno));
@@ -101,7 +100,7 @@ dictionary_t cm_process_line(dictionary_t __dest, const char *line,
 
 char *cm_sanitize_str(char *__dest, const ssize_t len) {
   for (int i = 0; i < len; i++) {
-    if (ispunct(__dest[i])) {
+    if (ispunct(__dest[i]) || __dest[i] == '\n') {
       __dest[i] = ' ';
     }
     __dest[i] = tolower(__dest[i]);

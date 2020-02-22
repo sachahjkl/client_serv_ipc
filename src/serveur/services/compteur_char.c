@@ -55,7 +55,7 @@ char *cc_from_file(char *__dest, const int argc, const char *argv[]) {
   char *line = NULL;
   size_t len = 0;
   ssize_t read;
-  char *filename = argv[1];
+  const char *filename = argv[1];
   fp = fopen(filename, "r");
   if (fp == NULL) {
     sprintf(__dest, "Le fichier n'a pas pu être ouvert :\n%s\n",
