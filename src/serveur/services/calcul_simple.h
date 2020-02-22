@@ -10,6 +10,7 @@
 #define CS_SOUSTRACTION "-"
 #define CS_MULTIPLICATION "*"
 #define CS_DIVISION "/"
+#define CS_POW "**"
 
 char *cs_calcul(char *__dest, const int argc, const char *argv[]);
 int cs_check(const int argc, const char *argv[]);
