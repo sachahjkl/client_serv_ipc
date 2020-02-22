@@ -77,11 +77,11 @@ char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
   if (dict->length != 0) {
     int i = 0;
     for (; i < dict->length - 1; i++) {
-      sprintf(__dest + strlen(__dest), "%s %*s %s %*.2lf %s\n", D_COL_SEPARATOR,
+      sprintf(__dest + strlen(__dest), "%s %*s %s %*g %s\n", D_COL_SEPARATOR,
               largest_key, dict->entries[i].key, D_COL_SEPARATOR, largest_value,
               dict->entries[i].value, D_COL_SEPARATOR);
     }
-    sprintf(__dest + strlen(__dest), "%s %*s %s %*.2lf %s\n", D_COL_SEPARATOR,
+    sprintf(__dest + strlen(__dest), "%s %*s %s %*g %s\n", D_COL_SEPARATOR,
             largest_key, dict->entries[i].key, D_COL_SEPARATOR, largest_value,
             dict->entries[i].value, D_COL_SEPARATOR);
 
@@ -93,7 +93,7 @@ char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
 
 void dict_update_widths(const char *key, double value) {
   char buf[D_MAX_DOUBLE_STR + 1];
-  sprintf(buf, "%.2lf", value);
+  sprintf(buf, "%g", value);
 
   int key_width = strlen(key);
   int value_width = strlen(buf);
