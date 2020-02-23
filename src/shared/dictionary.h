@@ -33,4 +33,14 @@ void dict_free(dictionary_t dict);
 char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
                const char *__value_col_name);
 
+// Other
+
+void dict_update_widths(const char *key, double value);
+
+char *replace_char(char *str, char find, char replace);
+
+char *dict_line_str(char *__dest);
+/* ajout manuel de la fonction strdup() car seulement dispo sur les impl
+POSIX du C */
+
 #endif

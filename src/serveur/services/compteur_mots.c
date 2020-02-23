@@ -70,6 +70,7 @@ char *cm_from_file(char *__dest, const int argc, const char *argv[]) {
   dict_str(__dest, dico, CM_COL_KEY_NAME, CM_COL_VAL_NAME);
   fclose(fp);
   if (line) free(line);
+  dict_free(dico);
   return __dest;
 }
 char *cm_from_text(char *__dest, const int argc, const char *argv[]) {
@@ -77,8 +78,8 @@ char *cm_from_text(char *__dest, const int argc, const char *argv[]) {
   for (int i = 1; i < argc; i++) {
     cm_process_line(dico, argv[i], strlen(argv[i]));
   }
-  // sprintf(__dest, "%d -- %d\n", largest_key, largest_value);
   dict_str(__dest, dico, CM_COL_KEY_NAME, CM_COL_VAL_NAME);
+  dict_free(dico);
   return __dest;
 }
 
@@ -88,7 +89,6 @@ dictionary_t cm_process_line(dictionary_t __dest, const char *line,
   snprintf(buf, len + 1, "%s", line);
   cm_sanitize_str(buf, len + 1);
   char *tok = strtok(buf, " \t");
-  int i = 0;
 
   while (tok) {
     double value = dict_find(__dest, tok, 0) + 1;

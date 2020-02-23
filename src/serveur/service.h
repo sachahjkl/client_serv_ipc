@@ -4,6 +4,11 @@
 
 #include "../shared/message.h"
 #include "../shared/result.h"
+#include "services/calcul_simple.h"
+#include "services/compteur_char.h"
+#include "services/compteur_mots.h"
+#include "services/proba_char.h"
+#include "services/proba_mots.h"
 
 #define FILENAME_MAX_LENGTH 20
 #define PROC_FILE "/proc/%d/stat"
@@ -15,12 +20,7 @@
   "disponibles."
 #define SE_NOT_IMPLEMENTED "Service pas encore implémenté."
 
-#define SE_CALCUL_SIMPLE "calcul-simple"
-#define SE_COMPTEUR_MOTS "compteur-mots"
-#define SE_COMPTEUR_CHAR "compteur-char"
-#define SE_PROBA_MOTS "proba-mots"
-#define SE_PROBA_CHAR "proba-char"
-#define SE_SERVICES "services"
+#define SE_SERVICE_NAME "services"
 
 result_t start_service(result_t __dest, const message_t __src);
 char *unknown_service(char *__dest);

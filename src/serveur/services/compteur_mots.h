@@ -1,6 +1,8 @@
 #ifndef COMPTEUR_MOTS_H
 #define COMPTEUR_MOTS_H
 
+#define CM_SERVICE_NAME "compteur-mots"
+
 #define CM_FILE "file"
 #define CM_TEXT "text"
 #define CM_COL_KEY_NAME "mots"

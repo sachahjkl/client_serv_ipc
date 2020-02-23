@@ -7,29 +7,22 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "../shared/result.h"
-#include "services/calcul_simple.h"
-#include "services/compteur_char.h"
-#include "services/compteur_mots.h"
-#include "services/proba_char.h"
-#include "services/proba_mots.h"
-
-const char *services[] = {SE_CALCUL_SIMPLE, SE_COMPTEUR_MOTS, SE_COMPTEUR_CHAR,
-                          SE_PROBA_MOTS,    SE_PROBA_CHAR,    SE_SERVICES};
+const char *services[] = {CS_SERVICE_NAME, CM_SERVICE_NAME, CC_SERVICE_NAME,
+                          PM_SERVICE_NAME, PC_SERVICE_NAME, SE_SERVICE_NAME};
 
 result_t start_service(result_t __dest, const message_t __src) {
   time_t start = clock();
-  if (strcmp(__src->service_name, SE_CALCUL_SIMPLE) == 0) {
+  if (strcmp(__src->service_name, CS_SERVICE_NAME) == 0) {
     cs_calcul(__dest->value, __src->argc, (const char **)__src->argv);
-  } else if (strcmp(__src->service_name, SE_COMPTEUR_MOTS) == 0) {
+  } else if (strcmp(__src->service_name, CM_SERVICE_NAME) == 0) {
     cm_calcul(__dest->value, __src->argc, (const char **)__src->argv);
-  } else if (strcmp(__src->service_name, SE_COMPTEUR_CHAR) == 0) {
+  } else if (strcmp(__src->service_name, CC_SERVICE_NAME) == 0) {
     cc_calcul(__dest->value, __src->argc, (const char **)__src->argv);
-  } else if (strcmp(__src->service_name, SE_PROBA_MOTS) == 0) {
-    not_implemented(__dest->value);
-  } else if (strcmp(__src->service_name, SE_PROBA_CHAR) == 0) {
-    not_implemented(__dest->value);
-  } else if (strcmp(__src->service_name, SE_SERVICES) == 0) {
+  } else if (strcmp(__src->service_name, PM_SERVICE_NAME) == 0) {
+    pm_calcul(__dest->value, __src->argc, (const char **)__src->argv);
+  } else if (strcmp(__src->service_name, PC_SERVICE_NAME) == 0) {
+    pc_calcul(__dest->value, __src->argc, (const char **)__src->argv);
+  } else if (strcmp(__src->service_name, SE_SERVICE_NAME) == 0) {
     get_services(__dest->value);
   } else {
     unknown_service(__dest->value);

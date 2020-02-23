@@ -111,7 +111,7 @@ int handle_connection(int msgid, int client_id) {
 
   result_t r = result_new();
   start_service(r, m);
-  log_result(r);
+  // log_result(r);
   message_free(m);
 
   r_serialize(r_buffer, r);

@@ -35,6 +35,7 @@ OBJ = obj
 CDIR = $(SRC)/client
 SDIR = $(SRC)/serveur
 SERVICES_DIR = $(SDIR)/services
+PROBA_DIR = $(SERVICES_DIR)/proba
 SHARED = $(SRC)/shared
 RM = \rm
 
@@ -47,7 +48,7 @@ FIFO_EXT = fifo
 all: serveur client
 
 # Serveur
-serveur: serveur.o service.o mq.o message.o log.o result.o dictionary.o calcul_simple.o compteur_char.o compteur_mots.o proba_char.o  proba_mots.o 
+serveur: serveur.o service.o mq.o message.o log.o result.o dictionary.o dict_p.o calcul_simple.o compteur_char.o compteur_mots.o proba_char.o proba_mots.o 
 	$(CC) $(CFLAGS) -o $(BIN)/serveur $(OBJ)/$< \
 	$(OBJ)/service.o \
 	$(OBJ)/mq.o \
@@ -55,11 +56,12 @@ serveur: serveur.o service.o mq.o message.o log.o result.o dictionary.o calcul_s
 	$(OBJ)/log.o \
 	$(OBJ)/result.o \
 	$(OBJ)/dictionary.o \
+	$(OBJ)/dict_p.o \
 	$(OBJ)/calcul_simple.o \
 	$(OBJ)/compteur_char.o \
 	$(OBJ)/compteur_mots.o \
 	$(OBJ)/proba_char.o \
-	$(OBJ)/proba_mots.o 
+	$(OBJ)/proba_mots.o  \
 
 # Client
 client: client.o mq.o message.o log.o result.o
@@ -83,6 +85,10 @@ client: client.o mq.o message.o log.o result.o
 
 # services
 %.o: $(SERVICES_DIR)/%.c $(SERVICES_DIR)/%.h
+	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
+	
+# proba dependencies
+%.o: $(PROBA_DIR)/%.c $(PROBA_DIR)/%.h
 	$(CC) $(CFLAGS) -c $< -o $(OBJ)/$@
 
 # Cleaning

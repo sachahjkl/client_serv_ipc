@@ -68,6 +68,7 @@ char *cc_from_file(char *__dest, const int argc, const char *argv[]) {
   dict_str(__dest, dico, CC_COL_KEY_NAME, CC_COL_VAL_NAME);
   fclose(fp);
   if (line) free(line);
+  dict_free(dico);
   return __dest;
 }
 char *cc_from_text(char *__dest, const int argc, const char *argv[]) {
@@ -76,8 +77,8 @@ char *cc_from_text(char *__dest, const int argc, const char *argv[]) {
   for (int i = 1; i < argc; i++) {
     cc_process_line(dico, argv[i]);
   }
-  // sprintf(__dest, "%d -- %d\n", largest_key, largest_value);
   dict_str(__dest, dico, CC_COL_KEY_NAME, CC_COL_VAL_NAME);
+  dict_free(dico);
   return __dest;
 }
 
