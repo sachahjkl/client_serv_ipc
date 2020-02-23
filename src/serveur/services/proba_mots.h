@@ -5,7 +5,7 @@
 
 #define PM_FILE "file"
 #define PM_TEXT "text"
-#define PM_KEY_NAME "char"
+#define PM_KEY_NAME "mot"
 #define PM_DICT_NAME "proba"
 
 #define PM_USAGE            \

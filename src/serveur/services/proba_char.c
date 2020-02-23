@@ -69,6 +69,7 @@ char *pc_from_file(char *__dest, const int argc, const char *argv[]) {
 
   fclose(fp);
   if (line) free(line);
+  dict_p_free(dico);
   return __dest;
 }
 char *pc_from_text(char *__dest, const int argc, const char *argv[]) {
@@ -78,6 +79,7 @@ char *pc_from_text(char *__dest, const int argc, const char *argv[]) {
     pc_process_line(dico, argv[i]);
   }
   dict_p_str(__dest, dico, PC_KEY_NAME, PC_DICT_NAME);
+  dict_p_free(dico);
 
   return __dest;
 }

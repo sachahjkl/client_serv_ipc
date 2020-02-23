@@ -70,6 +70,7 @@ char *cm_from_file(char *__dest, const int argc, const char *argv[]) {
   dict_str(__dest, dico, CM_COL_KEY_NAME, CM_COL_VAL_NAME);
   fclose(fp);
   if (line) free(line);
+  dict_free(dico);
   return __dest;
 }
 char *cm_from_text(char *__dest, const int argc, const char *argv[]) {
@@ -78,6 +79,7 @@ char *cm_from_text(char *__dest, const int argc, const char *argv[]) {
     cm_process_line(dico, argv[i], strlen(argv[i]));
   }
   dict_str(__dest, dico, CM_COL_KEY_NAME, CM_COL_VAL_NAME);
+  dict_free(dico);
   return __dest;
 }
 

@@ -75,7 +75,7 @@ void dict_p_free(dict_p_t dict_proba) {
 
 char *dict_p_str(char *__dest, dict_p_t dict_proba, const char *__key_name,
                  const char *__dict_name) {
-  const size_t MAX = 8192;
+  const size_t MAX = 65000;
   if (dict_proba->length > 0) {
     for (int i = 0; i < dict_proba->length; i++) {
       sprintf(__dest + strlen(__dest), "%s qu'un %s suive le %s '%s' :\n",

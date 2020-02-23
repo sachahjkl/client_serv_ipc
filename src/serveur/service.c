@@ -19,7 +19,7 @@ result_t start_service(result_t __dest, const message_t __src) {
   } else if (strcmp(__src->service_name, CC_SERVICE_NAME) == 0) {
     cc_calcul(__dest->value, __src->argc, (const char **)__src->argv);
   } else if (strcmp(__src->service_name, PM_SERVICE_NAME) == 0) {
-    not_implemented(__dest->value);
+    pm_calcul(__dest->value, __src->argc, (const char **)__src->argv);
   } else if (strcmp(__src->service_name, PC_SERVICE_NAME) == 0) {
     pc_calcul(__dest->value, __src->argc, (const char **)__src->argv);
   } else if (strcmp(__src->service_name, SE_SERVICE_NAME) == 0) {

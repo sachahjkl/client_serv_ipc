@@ -13,7 +13,8 @@
 
 char *pm_from_file(char *__dest, const int argc, const char *argv[]);
 char *pm_from_text(char *__dest, const int argc, const char *argv[]);
-dict_p_t pm_process_line(dict_p_t __dest, const char *line);
+dict_p_t pm_process_line(dict_p_t __dest, const char *line, const ssize_t len);
+char *pm_sanitize_str(char *__dest, const ssize_t len);
 
 char *pm_calcul(char *__dest, const int argc, const char *argv[]) {
 #define PM_MAX_METHODES 256
@@ -63,40 +64,47 @@ char *pm_from_file(char *__dest, const int argc, const char *argv[]) {
     return __dest;
   }
   while ((read = getline(&line, &len, fp)) != -1) {
-    pm_process_line(dico, line);
+    pm_process_line(dico, line, read);
   }
   dict_p_str(__dest, dico, PM_KEY_NAME, PM_DICT_NAME);
 
   fclose(fp);
   if (line) free(line);
+  dict_p_free(dico);
   return __dest;
 }
 char *pm_from_text(char *__dest, const int argc, const char *argv[]) {
   dict_p_t dico = dict_p_new();
 
   for (int i = 1; i < argc; i++) {
-    pm_process_line(dico, argv[i]);
+    pm_process_line(dico, argv[i], strlen(argv[i]));
   }
   dict_p_str(__dest, dico, PM_KEY_NAME, PM_DICT_NAME);
-
+  dict_p_free(dico);
   return __dest;
 }
 
-dict_p_t pm_process_line(dict_p_t __dest, const char *line) {
-  int line_length = strlen(line);
-  if (line_length >= 2) {
-    char c1 = ' ';
-    char c2 = ' ';
-    for (int i = 1; i < line_length; i++) {
-      c1 = tolower(line[i - 1]);
-      c2 = tolower(line[i]);
-      if (!(isspace(c1) || isspace(c2))) {
-        char key[] = {c1, '\0'};
-        char sub_key[] = {c2, '\0'};
+dict_p_t pm_process_line(dict_p_t __dest, const char *line, const ssize_t len) {
+  char *buf = calloc(len + 1, sizeof(char));
+  snprintf(buf, len + 1, "%s", line);
+  pm_sanitize_str(buf, len + 1);
+  char *tok1 = strtok(buf, " \t");
+  char *tok2 = strtok(NULL, " \t");
 
-        dict_p_add(__dest, key, sub_key);
-      }
+  while (tok2) {
+    dict_p_add(__dest, tok1, tok2);
+    tok1 = tok2;
+    tok2 = strtok(NULL, " \t");
+  }
+  return __dest;
+}
+
+char *pm_sanitize_str(char *__dest, const ssize_t len) {
+  for (int i = 0; i < len; i++) {
+    if (ispunct(__dest[i]) || __dest[i] == '\n') {
+      __dest[i] = ' ';
     }
+    __dest[i] = tolower(__dest[i]);
   }
   return __dest;
 }
