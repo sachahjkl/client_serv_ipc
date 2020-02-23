@@ -56,12 +56,14 @@ int send(int argc, char *argv[]) {
   close(fd_write);
   message_free(m);
 
-  read(fd_read, r_buffer, sizeof(r_buffer));
+  ssize_t read_s = read(fd_read, r_buffer, sizeof(r_buffer));
   close(fd_read);
 
-  result_t r = r_deserialize(result_new(), r_buffer);
-  display_results(r);
-  result_free(r);
+  if (read_s > 2L) {
+    result_t r = r_deserialize(result_new(), r_buffer);
+    display_results(r);
+    result_free(r);
+  }
 
   return EXIT_SUCCESS;
 }

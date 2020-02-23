@@ -28,7 +28,7 @@ result_t start_service(result_t __dest, const message_t __src) {
   } else if (strcmp(__src->service_name, SE_PROBA_MOTS) == 0) {
     not_implemented(__dest->value);
   } else if (strcmp(__src->service_name, SE_PROBA_CHAR) == 0) {
-    not_implemented(__dest->value);
+    pc_calcul(__dest->value, __src->argc, (const char **)__src->argv);
   } else if (strcmp(__src->service_name, SE_SERVICES) == 0) {
     get_services(__dest->value);
   } else {

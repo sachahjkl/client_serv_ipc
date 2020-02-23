@@ -1,18 +1,12 @@
 #include "dictionary.h"
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int largest_value = 0;
 int largest_key = 0;
-
-void dict_update_widths(const char *key, double value);
-char *replace_char(char *str, char find, char replace);
-char *dict_line_str(char *__dest);
-/* ajout manuel de la fonction strdup() car seulement dispo sur les impl
-POSIX du C */
-char *strdup(const char *c);
 
 int dict_find_index(dictionary_t dict, const char *key) {
   for (int i = 0; i < dict->length; i++) {
@@ -64,17 +58,17 @@ void dict_free(dictionary_t dict) {
 
 char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
                const char *__value_col_name) {
-  dict_line_str(__dest);
-  // header generation
-  if (__key_col_name != NULL && __value_col_name != NULL) {
-    sprintf(__dest + strlen(__dest), "%s %*s %s %*s %s\n", D_COL_SEPARATOR,
-            largest_key, __key_col_name, D_COL_SEPARATOR, largest_value,
-            __value_col_name, D_COL_SEPARATOR);
-    dict_line_str(__dest);
-  }
-
-  // content generation
   if (dict->length != 0) {
+    dict_line_str(__dest);
+    // header generation
+    if (__key_col_name != NULL && __value_col_name != NULL) {
+      sprintf(__dest + strlen(__dest), "%s %*s %s %*s %s\n", D_COL_SEPARATOR,
+              largest_key, __key_col_name, D_COL_SEPARATOR, largest_value,
+              __value_col_name, D_COL_SEPARATOR);
+      dict_line_str(__dest);
+    }
+
+    // content generation
     int i = 0;
     for (; i < dict->length - 1; i++) {
       sprintf(__dest + strlen(__dest), "%s %*s %s %*g %s\n", D_COL_SEPARATOR,
@@ -86,6 +80,8 @@ char *dict_str(char *__dest, dictionary_t dict, const char *__key_col_name,
             dict->entries[i].value, D_COL_SEPARATOR);
 
     dict_line_str(__dest);
+  } else {
+    sprintf(__dest, "Pas assez d'éléments.");
   }
 
   return __dest;
@@ -98,7 +94,6 @@ void dict_update_widths(const char *key, double value) {
   int key_width = strlen(key);
   int value_width = strlen(buf);
 
-  // printf("keyw : %d, valw : %d\n", key_width, value_width);
   if (largest_key < key_width) {
     largest_key = key_width;
   }
@@ -112,16 +107,9 @@ void dict_update_widths(const char *key, double value) {
 
 char *replace_char(char *str, char find, char replace) {
   char *current_pos = strchr(str, find);
-  for (char *p = current_pos; (current_pos = strchr(str, find)) != NULL;
-       *current_pos = replace)
+  for (; (current_pos = strchr(str, find)) != NULL; *current_pos = replace)
     ;
   return str;
-}
-
-char *strdup(const char *c) {
-  char *dup = calloc(strlen(c) + 1, sizeof(char));
-  if (dup != NULL) strcpy(dup, c);
-  return dup;
 }
 
 char *dict_line_str(char *__dest) {
