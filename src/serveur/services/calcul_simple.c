@@ -51,7 +51,7 @@ char *cs_calcul(char *__dest, const int argc, const char *argv[]) {
           res /= orig;
         }
       } else {
-        res = 0;
+        res = 1;
       }
     }
   } else {
