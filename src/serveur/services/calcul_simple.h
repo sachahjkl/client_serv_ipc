@@ -1,6 +1,8 @@
 #ifndef CALCUL_SIMPLE_H
 #define CALCUL_SIMPLE_H
 
+#define CS_SERVICE_NAME "calcul-simple"
+
 #define CS_MAX_RES_STR 125
 #define CS_USAGE            \
   "Arguments incorrects.\n" \

@@ -1,6 +1,8 @@
 #ifndef COMPTEUR_CHAR_H
 #define COMPTEUR_CHAR_H
 
+#define CC_SERVICE_NAME "compteur-char"
+
 #define CC_FILE "file"
 #define CC_TEXT "text"
 #define CC_COL_KEY_NAME "char"

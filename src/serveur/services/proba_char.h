@@ -1,6 +1,8 @@
 #ifndef PROBA_CHAR_H
 #define PROBA_CHAR_H
 
+#define PC_SERVICE_NAME "proba-char"
+
 #define PC_FILE "file"
 #define PC_TEXT "text"
 #define PC_KEY_NAME "char"
