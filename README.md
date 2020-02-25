@@ -42,8 +42,8 @@ Ensuite il est necessaire de démarrer le serveur en faisant :
 ./bin/serveur
 ```
 
-Une fois cela fait, on peut démarrer lancer des clients afin de demander
-l'execution des différents services.  
+Une fois cela fait, dans un autre terminal, on peut lancer des clients 
+afin de demander l'execution des différents services.  
 Pour cela il est possible de saisir les commandes suivantes :
 
 - Listage des services disponibles :
