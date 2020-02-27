@@ -1,12 +1,4 @@
----
-title: "Projet Architecture des Machines et des Systèmes"
-subtitle: "Client/Serveur"
-author:
-  - Sacha FROMENT
-  - Sivaajithan SIVATHEVAN
-lang: fr
----
-
+# Projet Architecture des Machines et des Système
 ## Contexte du projet
 
 L'objectif de ce projet est de mettre en oeuvre un système de processus
