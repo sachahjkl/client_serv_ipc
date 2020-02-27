@@ -1,0 +1,8 @@
+name: "client_serv_ipc"
+description: "Client/Serveur implentés en C. Le client émet des requêtes de lancement de tâches spécifiques, proposées par le serveur.\r\n\r\nUtilise la communication inter-processus disponible au sein des systèmes *NIX."
+topics: []
+homepage: ""
+source:
+  provider: gitlab
+  namespace: "cnam_a1_sys"
+  path: "cnam_a1_sys/client_serv_ipc"
