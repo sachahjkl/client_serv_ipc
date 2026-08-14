@@ -1,5 +1,5 @@
 #ifndef MQ_H
-#define MQ_Q
+#define MQ_H
 #include <sys/msg.h>
 
 #define MQ_DIR "/tmp"

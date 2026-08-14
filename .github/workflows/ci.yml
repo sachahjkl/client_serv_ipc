@@ -4,6 +4,7 @@ on:
   push:
     branches: ["**"]
     tags: ["**"]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -16,5 +17,4 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Build client and server
-        run: nix --extra-experimental-features "nix-command flakes" shell nixpkgs#gcc nixpkgs#gnumake --command make clean all
+      - run: nix flake check --print-build-logs
