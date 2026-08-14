@@ -1,5 +1,3 @@
-[English](README.md) | [Français](README.fr.md)
-
 # Computer and System Architecture Project
 ## Project context
 
