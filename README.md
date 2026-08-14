@@ -1,50 +1,47 @@
-# Projet Architecture des Machines et des Système
-## Contexte du projet
+[English](README.md) | [Français](README.fr.md)
 
-L'objectif de ce projet est de mettre en oeuvre un système de processus
-clients/serveurs permettant d'offrirs des services aux utilisateurs.
+# Computer and System Architecture Project
+## Project context
 
-Afin de mettre en place ce système, une des contraintes est d'utiliser les
-systèmes de communication inter-processus disponibles au sein des systèmes UNIX.
-Notamment les tubes nommés(ou non), les files de messages ou encore les
-sémaphores.
+This project implements a client/server process system that provides services
+to users.
 
-Il est également important de prendre en compte la performance des différentes
-services proposés à l'aide des méchanismes des fork et threads.
+One constraint is to use the inter-process communication systems available on
+UNIX systems. These include named or unnamed pipes, message queues, and
+semaphores.
 
-On informera l'utilisateur à la suite de l'exécution de son service des
-ressources utilisés nécessaires au calcul de celui ci. Pour cela on utilisera le
-système de fichiers virtuel /proc. Il rend possible l'accès à différentes
-informations sur le système et les processus en cours.
+The project also considers the performance of each service through fork and
+thread mechanisms.
 
-## Compilation et exécution
+After a service finishes, the system reports the resources that its computation
+used. It obtains this information from the /proc virtual file system. This file
+system provides information about the system and running processes.
 
-Afin de compiler le projet, il suffit d'exécuter dans le repertoire la
-commande :
+## Build and execution
+
+To build the project, run this command in the project directory:
 
 ```bash
 make clean all
 ```
 
-cela génerera deux executables nommés `serveur` et `client` dans le repertoire
-`bin/`.
-Ensuite il est necessaire de démarrer le serveur en faisant :
+This creates two executables named `serveur` and `client` in the `bin/`
+directory. Then start the server:
 
 ```bash
 ./bin/serveur
 ```
 
-Une fois cela fait, dans un autre terminal, on peut lancer des clients 
-afin de demander l'execution des différents services.  
-Pour cela il est possible de saisir les commandes suivantes :
+After the server starts, run clients in another terminal to request the
+available services. Use these commands:
 
-- Listage des services disponibles :
+- List available services:
 
   ```bash
   ./bin/client services
   ```
 
-- Calcul simple
+- Basic calculation
 
   ```bash
   ./bin/client calcul-simple + 5 3.14 6 [...]
@@ -54,7 +51,7 @@ Pour cela il est possible de saisir les commandes suivantes :
   ./bin/client calcul-simple "**" 2 6 [...]
   ```
 
-- Compteur de caractères
+- Character counter
 
   ```bash
   ./bin/client compteur-char text ceci est une phrase
@@ -64,7 +61,7 @@ Pour cela il est possible de saisir les commandes suivantes :
   ./bin/client compteur-char file "/home/user/fic.txt"
   ```
 
-- Compteur de mots
+- Word counter
 
   ```bash
   ./bin/client compteur-mots text ceci est une phrase
@@ -74,7 +71,7 @@ Pour cela il est possible de saisir les commandes suivantes :
   ./bin/client compteur-mots file "/home/user/fic.txt"
   ```
 
-- Probabilité qu'un caractère suive une autre caractère
+- Probability that one character follows another character
 
   ```bash
   ./bin/client proba-char text ceci est une phrase
@@ -84,7 +81,7 @@ Pour cela il est possible de saisir les commandes suivantes :
   ./bin/client proba-char file "/home/user/fic.txt"
   ```
 
-- Probabilité qu'un mot suive une autre mot
+- Probability that one word follows another word
 
   ```bash
   ./bin/client proba-mots text ceci est une phrase
@@ -94,21 +91,20 @@ Pour cela il est possible de saisir les commandes suivantes :
   ./bin/client proba-mots file "/home/user/fic.txt"
   ```
 
-  Le résultat s'affiche sur la **sortie standard**.
+  The result appears on **standard output**.
 
-## Script de test
+## Test script
 
-Un petit script de test à été écrit.  
-par défaut il lance 100 clients :
+A test script is included. By default, it starts 100 clients:
 
 ```bash
 ./test.sh
 ```
 
-Il accepte en paramètre un nombre arbitraire de clients à lancer :
+It accepts the number of clients to start as an argument:
 
 ```bash
 ./test.sh 10000
 ```
 
-lance 10000 clients
+This starts 10000 clients.
