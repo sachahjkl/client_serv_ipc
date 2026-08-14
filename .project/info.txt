@@ -1,0 +1,4 @@
+name=client_serv_ipc
+description=Client/Serveur implentés en C. Le client émet des requêtes de lancement de tâches spécifiques, proposées par le serveur.
+
+Utilise la communication inter-processus disponible au sein des systèmes *NIX.

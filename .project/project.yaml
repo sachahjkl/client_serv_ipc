@@ -1,8 +1,0 @@
-name: "client_serv_ipc"
-description: "Client/Serveur implentés en C. Le client émet des requêtes de lancement de tâches spécifiques, proposées par le serveur.\r\n\r\nUtilise la communication inter-processus disponible au sein des systèmes *NIX."
-topics: []
-homepage: ""
-source:
-  provider: github
-  namespace: "sachahjkl"
-  path: "sachahjkl/client_serv_ipc"
